@@ -88,6 +88,7 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
     
     public void doChannel(){
         System.out.println("DO CHANNEL!");
+	
         //createAndShowGUI();
     }
 
@@ -107,83 +108,19 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
     	
     	String channelStr = "<html>";
         for (Channel channel: channels){
-          Connector s = channel.getSourceConnector();
-          List<Connector> destList = channel.getDestinationConnectors();
-          channelStr += ("<h1>" + channel.getName() + "</h1>\n");
-          channelStr += ("<pre>Description:" + channel.getDescription() + "</pre>");
-	  channelStr += ("<h4>PreprocessingScript: </h4>");
-	  channelStr += ("<pre>" + channel.getPreprocessingScript() + "</pre>");
-	  channelStr += ("<h4>PostprocessingScript: </h4>");
-	  channelStr += ("<pre>" + channel.getPostprocessingScript() + "</pre>");
-	  channelStr += ("<h4>DeployScript: </h4>");
-	  channelStr += ("<pre>" + channel.getDeployScript() + "</pre>");
-	  channelStr += ("<h4>UndeployScript: </h4>");
-	  channelStr += ("<pre>" + channel.getUndeployScript() + "</pre>");
-	  channelStr += ("<h4>PreprocessingScript: </h4>");
-          Transformer t = s.getTransformer();
-          channelStr += ("<h2>" + s.getName() + " (" + s.getClass() + ")</h2>");
-          Filter f = s.getFilter();
-          channelStr += ("<div>IN: " + t.getInboundDataType() +" OUT: "+ t.getOutboundDataType() + "</div>");
-          List<Rule> rules = f.getElements();
-          channelStr += ("<h3>Filters:</h3>");
-	  try {
-            for (Rule rule: rules){
-	      if (rule.getType().toString() == "Rule Builder"){
-		      channelStr += ("<div>");
-		      channelStr += ("Accept if " + ((RuleBuilderRule)rule).getField().toString() + " " + ((RuleBuilderRule)rule).getCondition().toString() + " " + ((RuleBuilderRule)rule).getValues().toString() + "</div>");
-	      } 
+	    channelStr += Summarize.generate_summary(channel);
+	}
+	channelStr += "</html>";
+	//if (rule.getType().toString() == "Rule Builder"){
+		  //channelStr += ("<div>");
+		  //channelStr += ("Accept if " + ((RuleBuilderRule)rule).getField().toString() + " " + ((RuleBuilderRule)rule).getCondition().toString() + " " + ((RuleBuilderRule)rule).getValues().toString() + "</div>");
+	// } 
 	      /*
 	      if (rule.getType().toString().contains( "Java")){
 			channelStr += ("<pre>Accept if script returns true:\n"+((JavaScriptRule)rule).getScript() + "</pre>");
 	      } 
 	      */
-            }
-	  } catch (Exception e) {
-		  System.out.println(e.toString());
-	  }
-          channelStr += ("<h3>Transformers:</h3>");
-          List<Step> el = t.getElements();
-	  try {
-          for (Step fte: el){
-              //channelStr += ("<div>" + fte.getClass() + fte + "</div>");
-              channelStr += ("<div>" + fte.getType() + "</div>");
-	      try {
-		/*
-		if (fte.getType().toString().contains("Mapper")){
-		      channelStr += "<div>Set variable [" + ((MapperStep)fte).getVariable() + "] to [value in [" + ((MapperStep)fte).getMapping() + " in [" + ((MapperStep)fte).getScope().toString() + "]</div>";
-		}
-		*/
-		if (fte.getType().toString().contains("Message")){
-		      channelStr += "<div>Set [" + ((MessageBuilderStep)fte).getMessageSegment() + " from mapping: " + ((MessageBuilderStep)fte).getMapping() + "</div>" ;
-		}		
-	      } catch (Exception e2) {
-		System.out.println(e2.toString());
-	      }
-
-          }
-	} catch (Exception e) {
-		System.out.println(e.toString());
-	}
-          for (Connector d: destList){
-              channelStr += ("<h2>" + d.getName() + "</h2>");
-              Transformer dt = d.getTransformer();
-              Filter df = d.getFilter();
-              channelStr += ("<h3>IN: " + dt.getInboundDataType() + " OUT: " +dt.getOutboundDataType() + "</h3>");
-              List<Rule> frules = df.getElements();
-              for (Rule frule: frules){
-		  //channelStr += ("<div>" + frule.getClass() + "  "  + "</div>");//channelStr += 
-              	channelStr += ("<div>" + frule.getType() + "  "  + "</div>");//channelStr += 
-                channelStr += ("<h3>" + frule + "</h3>");
-              }
-              List<Step> del = dt.getElements();
-              for (Step fte: del){
-              	channelStr += ("<div>" + fte.getClass() + fte + "</div>");
-              	channelStr += ("<div>" + fte.getType() + "</div>");
-                channelStr += ("<h3>" + fte + "</h3>");
-              }
-          }
-        }
-        channelStr += "</html>";
+    //}
 
 
         //HTML Area for channel
@@ -217,7 +154,7 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
 
                    String selectedItem = (String) list.getSelectedValue();
                    // add selectedItem to your second list.
-                   text.setText("<html><h1>" + selectedItem + "</h1></html>");
+                   text.setText("<html><h1>" + Summarize.generate_summary(channels.toArray[0]) + "</h1></html>");
 
                  }
             }
