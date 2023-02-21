@@ -24,7 +24,7 @@ public class Summarize {
     static String generate_summary(Channel channel){
 	String channelStr = "";
 	channelStr += ("<h1>" + channel.getName() + "</h1>\n");
-        channelStr += ("<pre>Description:" + channel.getDescription() + "</pre>");
+        channelStr += ("<h4>Description:</h4><pre>" + channel.getDescription() + "</pre>");
 	channelStr += ("<h4>PreprocessingScript: </h4>");
 	channelStr += ("<pre>" + channel.getPreprocessingScript() + "</pre>");
 	channelStr += ("<h4>PostprocessingScript: </h4>");
@@ -44,18 +44,18 @@ public class Summarize {
 	    ConnectorProperties p = conn.getProperties();
 	    List<Rule> ruleList = f.getElements();
 	    List<Step> stepList = t.getElements();
-	    try {List<Step> respStepList = rt.getElements();}
-	    except (Exception e) {System.out.println("Null rt");}
-	    channelStr += ("<div>Props<pre>" + p +  "</pre></div>");
-	    channelStr += ("<div>Transport<pre>" + tn +  "</pre></div>");
+	    //try {List<Step> respStepList = rt.getElements();}
+	    //catch (Exception e) {System.out.println("Null rt");}
+	    channelStr += ("<div>Props: <pre>" + p +  "</pre></div>");
+	    channelStr += ("<div>Transport: " + tn +  "</div>");
     
-	    channelStr += ("<div>Transformer<pre>" + t + stepList + "</pre></div>");
+	    channelStr += ("<div>Transformer:<pre>" + stepList + "</pre></div>");
 	    channelStr += "<ul>";
 	    for (Step s: stepList){
 		channelStr += ("<li>" + s.getName() + "</li>");
 	    }
 	    channelStr += "</ul>";
-	    channelStr += ("<div>RespTrans<pre>" + rt + "</pre></div>");
+	    //channelStr += ("<div>RespTrans<pre>" + rt + "</pre></div>");
 	    channelStr += ("<div>Filter<pre>" + f +  ruleList + "</pre></div>");	}
 	return channelStr;
     }
