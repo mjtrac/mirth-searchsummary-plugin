@@ -1,6 +1,7 @@
 package com.mitchtrachtenberg.mirthpluginsearchsummary.client.panel;
 
 import java.util.List;
+import java.lang.String;
 
 import com.mirth.connect.model.Channel;
 import com.mirth.connect.model.Connector;
@@ -44,12 +45,14 @@ public class Summarize {
 	    ConnectorProperties p = conn.getProperties();
 	    List<Rule> ruleList = f.getElements();
 	    List<Step> stepList = t.getElements();
+	    String sl = " " + stepList;
+	    sl = sl.replace(",","\n");
 	    //try {List<Step> respStepList = rt.getElements();}
 	    //catch (Exception e) {System.out.println("Null rt");}
 	    channelStr += ("<div>Props: <pre>" + p +  "</pre></div>");
 	    channelStr += ("<div>Transport: " + tn +  "</div>");
     
-	    channelStr += ("<div>Transformer:<pre>" + stepList + "</pre></div>");
+	    channelStr += ("<div>Transformer:<pre>" + sl + "</pre></div>");
 	    channelStr += "<ul>";
 	    for (Step s: stepList){
 		channelStr += ("<li>" + s.getName() + "</li>");
