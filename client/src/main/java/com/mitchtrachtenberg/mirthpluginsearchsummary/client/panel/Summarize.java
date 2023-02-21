@@ -44,7 +44,8 @@ public class Summarize {
 	    ConnectorProperties p = conn.getProperties();
 	    List<Rule> ruleList = f.getElements();
 	    List<Step> stepList = t.getElements();
-	    List<Step> respStepList = rt.getElements();
+	    try {List<Step> respStepList = rt.getElements();}
+	    except (Exception e) {System.out.println("Null rt");}
 	    channelStr += ("<div>Props<pre>" + p +  "</pre></div>");
 	    channelStr += ("<div>Transport<pre>" + tn +  "</pre></div>");
     
