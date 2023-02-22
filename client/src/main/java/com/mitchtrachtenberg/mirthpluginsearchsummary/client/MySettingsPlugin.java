@@ -21,6 +21,7 @@ import com.mitchtrachtenberg.mirthpluginsearchsummary.client.panel.MainSettingsP
 import com.mitchtrachtenberg.mirthpluginsearchsummary.shared.MyConstants;
 import com.mirth.connect.client.ui.AbstractSettingsPanel;
 import com.mirth.connect.plugins.SettingsPanelPlugin;
+import com.mirth.connect.model.converters.ObjectXMLSerializer;
 
 @ClientClass
 public class MySettingsPlugin extends SettingsPanelPlugin {

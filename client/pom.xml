@@ -67,7 +67,32 @@
 
         <dependency>
             <groupId>com.mirth.connect.plugins</groupId>
+            <artifactId>messagebuilder-client</artifactId>
+            <version>${mirth.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mirth.connect.plugins</groupId>
             <artifactId>rulebuilder-shared</artifactId>
+            <version>${mirth.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.mirth.connect.connectors</groupId>
+            <artifactId>vm-client</artifactId>
+            <version>${mirth.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mirth.connect.connectors</groupId>
+            <artifactId>vm-shared</artifactId>
+            <version>${mirth.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mirth.connect.connectors</groupId>
+            <artifactId>vm-server</artifactId>
             <version>${mirth.version}</version>
         </dependency>
 
@@ -75,7 +100,7 @@
         <dependency>
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout</artifactId>
-            <version>${miglayout.version}</version>
+           <version>${miglayout.version}</version>
         </dependency>
 
         <dependency>

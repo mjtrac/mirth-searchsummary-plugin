@@ -26,6 +26,7 @@ import net.miginfocom.swing.MigLayout;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -62,6 +63,7 @@ import com.mirth.connect.model.Filter;
 import com.mirth.connect.model.Rule;
 import com.mirth.connect.model.Step;
 import com.mirth.connect.model.Transformer;
+import com.mirth.connect.model.converters.ObjectXMLSerializer;
 import com.mirth.connect.plugins.*;
 import com.mirth.connect.plugins.rulebuilder.RuleBuilderRule;
 //import com.mirth.connect.plugins.javascriptrule.JavaScriptRule;
@@ -69,6 +71,16 @@ import com.mirth.connect.plugins.rulebuilder.RuleBuilderRule;
 import com.mirth.connect.plugins.messagebuilder.MessageBuilderStep;
 import com.mitchtrachtenberg.mirthpluginsearchsummary.shared.MyConstants;
 import com.mirth.connect.donkey.model.*;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 //import net.miginfocom.swing.MigLayout;
 
@@ -88,6 +100,32 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
     
     public void doChannel(){
         System.out.println("DO CHANNEL!");
+    	//final List<Channel> channels = PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels();
+	//System.out.println(channels);
+        SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
+		@Override
+		public String doInBackground() {
+		    try {
+			String channelStr = Summarize.generate_all(
+			   PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels());
+			Path tempFile = Files.createTempFile(null, ".html");
+			System.out.println(tempFile);
+			Desktop desk = Desktop.getDesktop();
+			Files.write(tempFile, channelStr.getBytes(StandardCharsets.UTF_8));
+			desk.browse(tempFile.toUri());
+		    } catch (IOException e) {
+			System.out.println(e);
+		    } catch (Exception e){
+			System.out.println(e);
+		    }
+		    return "Done";
+		}
+		@Override
+		public void done() {
+		    System.out.println("Done starting browser.");
+		}
+	    };
+	worker.execute();
 	
         //createAndShowGUI();
     }
@@ -98,19 +136,7 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         setLayout(new BorderLayout());
 
         
-    	List<Channel> channels =  null;
-    	try {
-            channels = PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels();
-            System.out.println(channels);
-        } catch (Exception e){
-            System.out.println(e);
-        }
     	
-    	String channelStr = "<html>";
-        for (Channel channel: channels){
-	    channelStr += Summarize.generate_summary(channel);
-	}
-	channelStr += "</html>";
 	//if (rule.getType().toString() == "Rule Builder"){
 		  //channelStr += ("<div>");
 		  //channelStr += ("Accept if " + ((RuleBuilderRule)rule).getField().toString() + " " + ((RuleBuilderRule)rule).getCondition().toString() + " " + ((RuleBuilderRule)rule).getValues().toString() + "</div>");
@@ -133,7 +159,7 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         styleSheet.addRule("h2 {color: blue;}");
         styleSheet.addRule("pre {font : 10px monaco; color : black; background-color : #fafafa; }");
         kit.setStyleSheet(styleSheet);
-    	text.setText(channelStr);
+    	text.setText("Click Do Channel to open browser");
     	JScrollPane scroll = new JScrollPane(text);
         
         //List Area to choose channel
@@ -141,10 +167,10 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         String[] channelNameList;
         channelNameList = new String[20];
         int i = 0;
-        for (Channel channel: channels){
-        	channelNameList[i++] = channel.getName();
-        //channelNameList[0] = "alpha";
-        //channelNameList[1] = "beta";
+        //for (Channel channel: channels){
+        //	channelNameList[i++] = channel.getName();
+        channelNameList[0] = "alpha";
+        channelNameList[1] = "beta";
         list.setListData(channelNameList);
         
         MouseListener mouseListener = new MouseAdapter() {
@@ -158,7 +184,7 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         
         JScrollPane listScroll = new JScrollPane(list);
         JLabel label = new JLabel("Hello World");
-        JButton button = new JButton("Execute task");
+        JButton button = new JButton("Channels to browser");
         button.addActionListener(new ActionListener() {
             @Override 
             public void actionPerformed(ActionEvent e) {
@@ -192,22 +218,23 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
 
         this.add(split,BorderLayout.CENTER);
         this.add(button,BorderLayout.SOUTH);
+	/*
         //p.add(split,BorderLayout.CENTER);
         //p.add(button,BorderLayout.SOUTH);
  
         //Display the window.
         //this.pack();
         //this.setVisible(true);
-        }
-    }
-/*
+
         // this will print the HTML output
         } catch (Exception e) {
         	System.out.println(e.toString());
         } finally {
         	
         };
-*/
+	*/
+        
+    }
     
     
     @Override
