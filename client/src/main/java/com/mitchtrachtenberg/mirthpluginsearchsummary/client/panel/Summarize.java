@@ -46,9 +46,9 @@ public class Summarize {
     static String generate_all(List<Channel> channels){
 	StringBuilder sb = new StringBuilder();
     	sb.append("<html>");
-	sb.append("<link rel=\"stylesheet\" href=\"C:/Users/mjtra/jquery-ui-1.13.2/jquery-ui-1.13.2/jquery-ui.min.css\">");
-	sb.append("<script src=\"C:/Users/mjtra/jquery-ui-1.13.2/jquery-ui-1.13.2/external/jquery/jquery.js\"></script>");
-	sb.append("<script src=\"C:/Users/mjtra/jquery-ui-1.13.2/jquery-ui-1.13.2/jquery-ui.min.js\"></script>\n");
+	sb.append("<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js\"></script>");
+	sb.append("<link rel=\"stylesheet\" href=\"https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css\">");
+	sb.append("<script src=\"https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js\"></script>");
 	sb.append("<script>  $( function() {\n");
 	sb.append("$( \"#accordion\" ).accordion({\n");
 	sb.append("heightStyle: \"content\"\n");
