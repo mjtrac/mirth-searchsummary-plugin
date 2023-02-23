@@ -99,9 +99,7 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
     }
     
     public void doChannel(){
-        System.out.println("DO CHANNEL!");
-    	//final List<Channel> channels = PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels();
-	//System.out.println(channels);
+        System.out.println("DO CHANNEL PRESSED, STARTING WORKER");
         SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
 		@Override
 		public String doInBackground() {
@@ -122,12 +120,10 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
 		}
 		@Override
 		public void done() {
-		    System.out.println("Done starting browser.");
+		    System.out.println("DO CHANNEL'S WORKER DONE.");
 		}
 	    };
 	worker.execute();
-	
-        //createAndShowGUI();
     }
 
     private void initComponents() {
@@ -140,7 +136,7 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
 	//if (rule.getType().toString() == "Rule Builder"){
 		  //channelStr += ("<div>");
 		  //channelStr += ("Accept if " + ((RuleBuilderRule)rule).getField().toString() + " " + ((RuleBuilderRule)rule).getCondition().toString() + " " + ((RuleBuilderRule)rule).getValues().toString() + "</div>");
-	// } 
+// } 
 	      /*
 	      if (rule.getType().toString().contains( "Java")){
 			channelStr += ("<pre>Accept if script returns true:\n"+((JavaScriptRule)rule).getScript() + "</pre>");
@@ -159,7 +155,7 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         styleSheet.addRule("h2 {color: blue;}");
         styleSheet.addRule("pre {font : 10px monaco; color : black; background-color : #fafafa; }");
         kit.setStyleSheet(styleSheet);
-    	text.setText("Click Do Channel to open browser");
+    	text.setText("<html><div>&lt;-- Click Do Channel to open browser.<br/>Use the nonexistent controls to search only channels with<br/>particular connector types, filters or transformers\nand to switch output between collapsible and full display.</div><div>TODO: Handle iteration by extracting children in rules and steps.</br>Add response transformer handling.</br>Add special handling for particular connector types to highlight relevant properties.<br/>For example, port, host, file, scheme, template </div></html");
     	JScrollPane scroll = new JScrollPane(text);
         
         //List Area to choose channel
