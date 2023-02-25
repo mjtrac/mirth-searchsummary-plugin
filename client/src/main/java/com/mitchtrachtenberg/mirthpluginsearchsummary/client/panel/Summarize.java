@@ -189,7 +189,7 @@ public class Summarize {
 		channelStr += "<h4>Connector transformer elements</h4>\n";
 		channelStr += "<div>\n";
 		// retrieve XML entries associated with the transformers
-		channelStr += "<pre>" + get_xml(ObjectXMLSerializer.getInstance().serialize(t),"//elements/*") + "</pre>";
+		channelStr += "<pre>" + get_xml(ObjectXMLSerializer.getInstance().serialize(t),"//elements//*") + "</pre>";
 		
 		channelStr += "<ul>\n";
 		int i = 1; // the 0th entry is before the first step
@@ -201,7 +201,7 @@ public class Summarize {
 		channelStr += ("<h4>Connector filter elements </h4>");
 		channelStr += "<div>";
 		// retrieve XML entries associated with the filters
-		channelStr += "<pre>" + get_xml(ObjectXMLSerializer.getInstance().serialize(f),"//elements/*") + "</pre>";
+		channelStr += "<pre>" + get_xml(ObjectXMLSerializer.getInstance().serialize(f),"//elements//*") + "</pre>";
 
 		channelStr += "<ul>";
 		i=1; // the 0th entry is before the first rule
