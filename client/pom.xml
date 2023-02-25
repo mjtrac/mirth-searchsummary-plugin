@@ -65,11 +65,6 @@
             <version>${mirth.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.mirth.connect.plugins</groupId>
-            <artifactId>messagebuilder-client</artifactId>
-            <version>${mirth.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.mirth.connect.plugins</groupId>
@@ -108,5 +103,6 @@
             <artifactId>shared</artifactId>
             <version>${project.version}</version>
         </dependency>
+
     </dependencies>
 </project>

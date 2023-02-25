@@ -72,7 +72,8 @@ import com.mirth.connect.plugins.messagebuilder.MessageBuilderStep;
 import com.mitchtrachtenberg.mirthpluginsearchsummary.shared.MyConstants;
 import com.mirth.connect.donkey.model.*;
 
-import java.io.IOException;
+import java.io.*;
+//import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -81,6 +82,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.XMLConstants;
+//import java.io.File;
+//import java.io.IOException;
+//import java.io.InputStream;
 
 //import net.miginfocom.swing.MigLayout;
 
@@ -95,24 +110,30 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
     }
 
     public void doSearch(){
-        System.out.println("DO SEARCH!");
+        System.out.println("DO SEARCH!");	
     }
     
     public void doChannel(){
-        System.out.println("DO CHANNEL PRESSED, STARTING WORKER");
+        System.out.println("DO CHANNEL PRESSED, using Summarize.useDocumentHelper");
+	System.out.println("DO CHANNEL PRESSED, STARTING WORKER");
         SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
 		@Override
 		public String doInBackground() {
 		    try {
+			System.out.println("CALLING SUMMARIZE.generate_all");
 			String channelStr = Summarize.generate_all(
-			   PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels());
+								   PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels());
+			System.out.println("BACK FROM SUMMARIZE.generate_all");
 			Path tempFile = Files.createTempFile(null, ".html");
-			System.out.println(tempFile);
+			System.out.println("WROTE " + tempFile);
+			System.out.println("Desktop.getDesktop()");
 			Desktop desk = Desktop.getDesktop();
-			Files.write(tempFile, channelStr.getBytes(StandardCharsets.UTF_8));
+			Files.write(tempFile,
+				    channelStr.getBytes(
+							StandardCharsets.UTF_8
+							)
+				    );
 			desk.browse(tempFile.toUri());
-		    } catch (IOException e) {
-			System.out.println(e);
 		    } catch (Exception e){
 			System.out.println(e);
 		    }

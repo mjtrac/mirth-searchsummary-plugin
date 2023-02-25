@@ -1,5 +1,6 @@
 package com.mitchtrachtenberg.mirthpluginsearchsummary.client.panel;
 
+import java.io.*;
 import java.util.List;
 import java.lang.String;
 import java.util.HashMap;
@@ -25,7 +26,66 @@ import com.mitchtrachtenberg.mirthpluginsearchsummary.shared.MyConstants;
 import com.mirth.connect.donkey.model.*;
 import com.mirth.connect.model.Channel;
 
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.XMLConstants;
+import javax.xml.xpath.*;
+import javax.xml.xpath.XPathConstants;
+
 public class Summarize {
+
+    static String get_xml(String xmlString, String searchString){
+	StringBuilder sb = new StringBuilder();
+	try {
+	    
+	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+          // optional, but recommended
+          // process XML securely, avoid attacks like XML External Entities (XXE)
+	    dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+          // parse XML string
+	    DocumentBuilder db = dbf.newDocumentBuilder();
+	    InputSource is = new InputSource(new StringReader(xmlString));
+	    Document doc = db.parse(is);
+	    doc.getDocumentElement().normalize();
+	    System.out.println("Root Element :" + doc.getDocumentElement().getNodeName());
+	    XPath xPath = XPathFactory.newInstance().newXPath();
+	    NodeList nodes = (NodeList)xPath.evaluate(
+						      searchString,
+						      doc,
+						      XPathConstants.NODESET);
+	    //System.out.println(nodes.size());
+	    int nodeListLen = nodes.getLength();
+	    for (int i = 0; i < nodeListLen ; i++){
+		Node n = nodes.item(i);
+		Node p = nodes.item(i);
+		short nType = n.getNodeType();
+		String path="";
+		while (p != null) {
+		    path = p.getNodeName() + " " + String.valueOf(p.getNodeType()) + "/" + path;
+		    p = p.getParentNode();
+		}
+		path = path.replaceAll("#document/","");
+		path = path.replaceAll("com.mirth.connect.plugins.","");
+		
+		sb.append( path + " = " + n.getTextContent()+ "\n");
+		
+	    }
+	} catch (Exception e){
+	    System.out.println(e);
+	}
+	return(sb.toString());
+    }
+    
     static String map_to_string(HashMap m){
 	HashMap<String, String> test1 = new HashMap();
         test1.put("a","b");
@@ -44,6 +104,7 @@ public class Summarize {
 	return (channelStr);
     }
     static String generate_all(List<Channel> channels){
+	System.out.println("In generate_all");
 	StringBuilder sb = new StringBuilder();
     	sb.append("<html>");
 	sb.append("<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js\"></script>");
@@ -68,8 +129,10 @@ public class Summarize {
 	sb.append("} );\n");
 	//open accordion div
 	sb.append("</script></head><body><div id=\"accordion\">");
+	System.out.println("In generate_all post header");
 
         for (Channel channel: channels){
+	    System.out.println("Calling generate_summary on " + channel);
 	    sb.append(Summarize.generate_summary(channel));
 	}
 	//close accordion div
@@ -99,30 +162,21 @@ public class Summarize {
 	    Transformer t = conn.getTransformer();
 	    Filter f = conn.getFilter();
 	    ConnectorProperties p = conn.getProperties();
-	    String propStr;
 	    try {
 		if(p != null){
-		    propStr = escapeHTML(ObjectXMLSerializer.getInstance().serialize(p));
+		    System.out.println("p != null");
+		    String propStrXML = ObjectXMLSerializer.getInstance().serialize(p);
+		    String propStrResult = get_xml(propStrXML,"//*");
+		    //propStr = escapeHTML(propStrXML);
+		    //try extracting using dom4j
 		    channelStr += "<h4>Connector properties</h4>\n";
-		    channelStr += ("<div><pre>" + propStr +  "</pre>\n</div>\n");
+		    channelStr += ("<div><pre>" + propStrResult +  "</pre>\n</div>\n");
 		}
 	    } catch (Exception e){
 		System.out.println(e);
 	    }
-	    /*
-	      try {
-		if(p != null){
-		    propStr = escapeHTML(p.toFormattedString());
-		} else {
-		    propStr = "No conn props from connector.getProperties()";
-		}
-		channelStr += ("<div>Props: <pre>" + propStr +  "</pre></div>");
-	    } catch (Exception e){
-		System.out.println(e);
-		System.out.println("Problem with translating connector props.");
-		channelStr += ("<div>Props: <pre>Could not get info from " + p +  "</pre></div>");
-		}
-	    */
+
+
 	    try {
 		List<Rule> ruleList = f.getElements();
 		List<Step> stepList = t.getElements();
@@ -132,34 +186,38 @@ public class Summarize {
 		rl = rl.replace(",","\n");
 		String[] stepStrList = sl.split("Step\\[");
 		String[] ruleStrList = rl.split("Rule\\[");
-		System.out.println("Step");
-		System.out.println(stepStrList);
-		System.out.println("Rule");
-		System.out.println(ruleStrList);
-		channelStr += "<h4>Connector transformers</h4>\n";
-		channelStr += "<div><ul>\n";
+		channelStr += "<h4>Connector transformer elements</h4>\n";
+		channelStr += "<div>\n";
+		// retrieve XML entries associated with the transformers
+		channelStr += "<pre>" + get_xml(ObjectXMLSerializer.getInstance().serialize(t),"//elements/*") + "</pre>";
+		
+		channelStr += "<ul>\n";
 		int i = 1; // the 0th entry is before the first step
 		for (Step s: stepList){
 		    channelStr += ("<li>" + s.getName());
 		    channelStr += ("<pre>" + stepStrList[i++] + "</pre></li>\n");
 		}
 		channelStr += "</ul></div>\n";
-		channelStr += ("<h4>Connector filters </h4>");
-		channelStr += "<div><ul>";
+		channelStr += ("<h4>Connector filter elements </h4>");
+		channelStr += "<div>";
+		// retrieve XML entries associated with the filters
+		channelStr += "<pre>" + get_xml(ObjectXMLSerializer.getInstance().serialize(f),"//elements/*") + "</pre>";
+
+		channelStr += "<ul>";
 		i=1; // the 0th entry is before the first rule
 		for (Rule r: ruleList){
 		    String ruleOpStr = "";
 		    try {
 			ruleOpStr = r.getOperator().name();
 		    } catch (Exception e){
-			System.out.println("Problem with getOperator: null? " + r);
+			//System.out.println("Problem with getOperator: null? " + r);
 		    }
 		    channelStr += ("<li>" + ruleOpStr + " " + r.getName() );
 		    channelStr += ("<pre> " + ruleStrList[i++] + "</pre>\n</li>\n");
 		}
 	    } catch (Exception e) {
-		System.out.println("Problem with rule or step list");
-		System.out.println(e);
+		//System.out.println("Problem with rule or step list");
+		//System.out.println(e);
 	    }
 	    channelStr += "</ul></div>\n";
 	    channelStr += "</div>\n"; //ends accordion3 div
@@ -183,5 +241,7 @@ public class Summarize {
 	}
 	return out.toString();
     }
+    
+    
 }
 
