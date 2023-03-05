@@ -37,6 +37,12 @@
 
         <dependency>
             <groupId>com.mirth.connect</groupId>
+            <artifactId>mirth-server</artifactId>
+            <version>${mirth.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mirth.connect</groupId>
             <artifactId>donkey-model</artifactId>
             <version>${mirth.version}</version>
         </dependency>

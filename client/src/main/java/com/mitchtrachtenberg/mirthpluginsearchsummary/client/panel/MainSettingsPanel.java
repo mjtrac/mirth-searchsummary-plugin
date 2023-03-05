@@ -152,19 +152,6 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setLayout(new BorderLayout());
 
-        
-    	
-	//if (rule.getType().toString() == "Rule Builder"){
-		  //channelStr += ("<div>");
-		  //channelStr += ("Accept if " + ((RuleBuilderRule)rule).getField().toString() + " " + ((RuleBuilderRule)rule).getCondition().toString() + " " + ((RuleBuilderRule)rule).getValues().toString() + "</div>");
-// } 
-	      /*
-	      if (rule.getType().toString().contains( "Java")){
-			channelStr += ("<pre>Accept if script returns true:\n"+((JavaScriptRule)rule).getScript() + "</pre>");
-	      } 
-	      */
-    //}
-
 
         //HTML Area for channel
         JEditorPane text = new JEditorPane();

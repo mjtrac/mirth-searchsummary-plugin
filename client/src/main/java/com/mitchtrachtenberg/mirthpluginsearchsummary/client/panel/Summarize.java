@@ -5,6 +5,7 @@ import java.util.List;
 import java.lang.String;
 import java.util.HashMap;
 
+import com.mirth.connect.model.ChannelProperties;
 import com.mirth.connect.model.Channel;
 import com.mirth.connect.model.Connector;
 import com.mirth.connect.model.Filter;
@@ -57,7 +58,6 @@ public class Summarize {
 	    InputSource is = new InputSource(new StringReader(xmlString));
 	    Document doc = db.parse(is);
 	    doc.getDocumentElement().normalize();
-	    System.out.println("Root Element :" + doc.getDocumentElement().getNodeName());
 	    XPath xPath = XPathFactory.newInstance().newXPath();
 	    NodeList nodes = (NodeList)xPath.evaluate(
 						      searchString,
@@ -71,11 +71,12 @@ public class Summarize {
 		short nType = n.getNodeType();
 		String path="";
 		while (p != null) {
-		    path = p.getNodeName() + " " + String.valueOf(p.getNodeType()) + "/" + path;
+		    path = p.getNodeName() +  "/" + path;
 		    p = p.getParentNode();
 		}
 		path = path.replaceAll("#document/","");
 		path = path.replaceAll("com.mirth.connect.plugins.","");
+		path = path.replaceAll("com.mirth.connect.connectors.","...");
 		
 		sb.append( path + " = " + n.getTextContent()+ "\n");
 		
@@ -83,7 +84,8 @@ public class Summarize {
 	} catch (Exception e){
 	    System.out.println(e);
 	}
-	return(sb.toString());
+	String retString = escapeHTML(sb.toString());
+	return(retString);
     }
     
     static String map_to_string(HashMap m){
@@ -96,7 +98,7 @@ public class Summarize {
     
     static String gen_sample_summary(Channel channel){
 	String channelStr = "<div id=\"accordion\">";//open accordion div
-	channelStr += ("<h3>" + channel.getName() + "</h3>\n");
+	channelStr += ("<h3>" + channel.getName() + " " + channel.getId() + "</h3>\n");
 	channelStr += ("<div>");//creates inner div
         channelStr += ("<p>Description:</p>");
         channelStr += ("<p>Properties:</p>");
@@ -112,19 +114,22 @@ public class Summarize {
 	sb.append("<script src=\"https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js\"></script>");
 	sb.append("<script>  $( function() {\n");
 	sb.append("$( \"#accordion\" ).accordion({\n");
-	sb.append("heightStyle: \"content\"\n");
+	sb.append("heightStyle: \"content\",\n");
+	sb.append("collapsible: \"true\"\n");
 	sb.append("});\n");
 	sb.append("} );\n");
 	sb.append("</script>\n<script>\n");
 	sb.append("$( function() {\n");
 	sb.append("$( \".accordion2\" ).accordion({\n");
-	sb.append("heightStyle: \"content\"\n");
+	sb.append("heightStyle: \"content\",\n");
+	sb.append("collapsible: \"true\"\n");
 	sb.append("});\n");
 	sb.append("} );\n");
 	sb.append("</script>\n<script>\n");
 	sb.append("$( function() {\n");
 	sb.append("$( \".accordion3\" ).accordion({\n");
-	sb.append("heightStyle: \"content\"\n");
+	sb.append("heightStyle: \"content\",\n");
+	sb.append("collapsible: \"true\"\n");
 	sb.append("});\n");
 	sb.append("} );\n");
 	//open accordion div
@@ -132,7 +137,6 @@ public class Summarize {
 	System.out.println("In generate_all post header");
 
         for (Channel channel: channels){
-	    System.out.println("Calling generate_summary on " + channel);
 	    sb.append(Summarize.generate_summary(channel));
 	}
 	//close accordion div
@@ -141,34 +145,54 @@ public class Summarize {
     }
     static String generate_summary(Channel channel){
         // this creates an h3 header and a div for the channel contents
+	String description = channel.getDescription();
+	int descriptionLength = 0;
+	if (description != null) descriptionLength = description.length();
+	String deployScript = channel.getDeployScript();
+	int deployScriptLength = deployScript.length();
+	String undeployScript = channel.getUndeployScript();
+	int undeployScriptLength = undeployScript.length();
+	String preprocessingScript = channel.getPreprocessingScript();
+	int preprocessingScriptLength = preprocessingScript.length();
+	String postprocessingScript = channel.getPostprocessingScript();
+	int postprocessingScriptLength = postprocessingScript.length();
+
+	ChannelProperties props = channel.getProperties();
+
+
 	String channelStr = ("<h3>" + channel.getName() + "</h3>\n");
 	channelStr += "<div>\n";//creates inner div for accordion
 	channelStr += "<div class=\"accordion2\">\n";
-        channelStr += ("<h4>Description:</h4>\n<div>\n<pre>" + escapeHTML(channel.getDescription()) + "</pre>\n</div>\n");
-	channelStr += ("<h4>PreprocessingScript: </h4>\n");
-	channelStr += ("<div>\n<pre>" + escapeHTML(channel.getPreprocessingScript()) + "</pre>\n</div>\n");
-	channelStr += ("<h4>PostprocessingScript: </h4>\n");
-	channelStr += ("<div>\n<pre>" + escapeHTML(channel.getPostprocessingScript()) + "</pre>\n</div>\n");
-	channelStr += ("<h4>DeployScript: </h4>\n");
-	channelStr += ("<div>\n<pre>" + escapeHTML(channel.getDeployScript()) + "</pre>\n</div>\n");
-	channelStr += ("<h4>UndeployScript: </h4>\n");
-	channelStr += ("<div>\n<pre>" + escapeHTML(channel.getUndeployScript()) + "</pre>\n</div>\n");
+        channelStr += ("<h4>Description: " + descriptionLength + " chars </h4>\n<div>\n<pre>"  + escapeHTML(description) + "</pre>\n</div>\n");
+	channelStr += ("<h4>PreprocessingScript: " +  preprocessingScriptLength + " chars </h4>\n");
+	channelStr += ("<div>\n<pre>" + escapeHTML(preprocessingScript) + "</pre>\n</div>\n");
+	channelStr += ("<h4>PostprocessingScript: "+ postprocessingScriptLength +" chars</h4>\n");
+	channelStr += ("<div>\n<pre>"  + escapeHTML(postprocessingScript) + "</pre>\n</div>\n");
+	channelStr += ("<h4>DeployScript: " + deployScriptLength + " chars</h4>\n");
+	channelStr += ("<div>\n<pre>" + escapeHTML(deployScript) + "</pre>\n</div>\n");
+	channelStr += ("<h4>UndeployScript: " + undeployScriptLength + " chars</h4>\n");
+	channelStr += ("<div>\n<pre>" + escapeHTML(undeployScript) + "</pre>\n</div>\n");
+	try {
+		if(props != null){
+		    String propStrXML = ObjectXMLSerializer.getInstance().serialize(props);
+		    String propStrResult = get_xml(propStrXML,"//*[not(@*)]");
+		    channelStr += "<h4>Channel properties</h4>\n";
+		    channelStr += ("<div><pre>" + propStrResult +  "</pre>\n</div>\n");
+		}
+	    } catch (Exception e){
+		System.out.println(e);
+	    }
         List<Connector> connList = channel.getDestinationConnectors();
 	connList.add(0,channel.getSourceConnector());
 	for (Connector conn: connList){
-	    channelStr += ("<h4>C O N N E C T O R " + conn.getName() + " (" + conn.getTransportName() + ")</h4>\n");
+	    channelStr += ("<h4><b>CONNECTOR</b> " + conn.getName() + " (" + conn.getTransportName() + ")</h4>\n");
 	    channelStr += "<div>\n"; // conn contents division starts
 	    channelStr += "<div class=\"accordion3\">\n"; // acc3 starts
-	    Transformer t = conn.getTransformer();
-	    Filter f = conn.getFilter();
 	    ConnectorProperties p = conn.getProperties();
 	    try {
 		if(p != null){
-		    System.out.println("p != null");
 		    String propStrXML = ObjectXMLSerializer.getInstance().serialize(p);
-		    String propStrResult = get_xml(propStrXML,"//*");
-		    //propStr = escapeHTML(propStrXML);
-		    //try extracting using dom4j
+		    String propStrResult = get_xml(propStrXML,"//*[not(@*)]");
 		    channelStr += "<h4>Connector properties</h4>\n";
 		    channelStr += ("<div><pre>" + propStrResult +  "</pre>\n</div>\n");
 		}
@@ -178,50 +202,36 @@ public class Summarize {
 
 
 	    try {
-		List<Rule> ruleList = f.getElements();
-		List<Step> stepList = t.getElements();
-		String sl = " " + stepList;
-		sl = sl.replace(",","\n");
-		String rl = " " + ruleList;
-		rl = rl.replace(",","\n");
-		String[] stepStrList = sl.split("Step\\[");
-		String[] ruleStrList = rl.split("Rule\\[");
-		channelStr += "<h4>Connector transformer elements</h4>\n";
-		channelStr += "<div>\n";
-		// retrieve XML entries associated with the transformers
-		channelStr += "<pre>" + get_xml(ObjectXMLSerializer.getInstance().serialize(t),"//elements//*") + "</pre>";
-		
-		channelStr += "<ul>\n";
-		int i = 1; // the 0th entry is before the first step
-		for (Step s: stepList){
-		    channelStr += ("<li>" + s.getName());
-		    channelStr += ("<pre>" + stepStrList[i++] + "</pre></li>\n");
-		}
-		channelStr += "</ul></div>\n";
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		// optional, but recommended
+		// process XML securely,
+		//avoid attacks like XML External Entities (XXE)
+		dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+		// parse XML string
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		InputSource is;
+		is = new InputSource(new StringReader(
+			     ObjectXMLSerializer.getInstance().serialize(conn)));
+		Document doc = db.parse(is);
+		doc.getDocumentElement().normalize();
+
 		channelStr += ("<h4>Connector filter elements </h4>");
 		channelStr += "<div>";
-		// retrieve XML entries associated with the filters
-		channelStr += "<pre>" + get_xml(ObjectXMLSerializer.getInstance().serialize(f),"//elements//*") + "</pre>";
-
 		channelStr += "<ul>";
-		i=1; // the 0th entry is before the first rule
-		for (Rule r: ruleList){
-		    String ruleOpStr = "";
-		    try {
-			ruleOpStr = r.getOperator().name();
-		    } catch (Exception e){
-			//System.out.println("Problem with getOperator: null? " + r);
-		    }
-		    channelStr += ("<li>" + ruleOpStr + " " + r.getName() );
-		    channelStr += ("<pre> " + ruleStrList[i++] + "</pre>\n</li>\n");
-		}
+		channelStr += generateElements(doc,"filter",true);
+		channelStr += "</ul></div>\n";
+		channelStr += ("<h4>Connector transformer elements </h4>");
+		channelStr += "<div>";
+		channelStr += "<ul>";
+		channelStr += generateElements(doc,"transformer",true);
+		channelStr += "</ul></div>\n";
+		channelStr += "</div>\n"; //ends accordion3 div
+		channelStr += "</div>\n"; //ends inner div with conn contents
 	    } catch (Exception e) {
 		//System.out.println("Problem with rule or step list");
 		//System.out.println(e);
 	    }
-	    channelStr += "</ul></div>\n";
-	    channelStr += "</div>\n"; //ends accordion3 div
-	    channelStr += "</div>\n"; //ends inner div with conn contents
 	} // end for loop
 	channelStr += "</div>\n"; //ends accordion2 div for scripts, connectors
 	channelStr += "</div>\n"; //ends accordion div for channel
@@ -243,5 +253,183 @@ public class Summarize {
     }
     
     
-}
+    // IMPORTED FROM MAIN.JAVA
 
+    static String generateElements(Document doc, String eltype, boolean html){
+
+        //System.out.println("Hello world!");
+        StringBuilder retString = new StringBuilder();
+        try {
+
+             HashMap<String,String> strings = new HashMap<>();
+	     XPath xPath = XPathFactory.newInstance().newXPath();
+	     NodeList parents = (NodeList) xPath.evaluate(
+			     String.format("//%s/elements",eltype),
+			     doc,
+			     XPathConstants.NODESET);
+	     //System.out.println("Num transformer/elements " + parents.getLength());
+	     for (int i = 0; i < parents.getLength(); i++) {
+		 retString.append(getElements(parents.item(i),true));
+                }
+         } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return( retString.toString() );
+    }
+    // getElements: return text describing transformer elements,
+    // including those elements on the children list of iterators
+    // Call on each descendant of ..../transformer|filterI'm /elements
+    static StringBuilder getElements(Node transformerOrChildrenNode, boolean html) throws javax.xml.xpath.XPathExpressionException {
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        StringBuilder retString = new StringBuilder();
+	String start = "";
+	String end = "";
+	if (html == true){
+	    start = "<li>";
+	    end = "</li>";
+	}
+        if (transformerOrChildrenNode == null) {
+            retString.append( "Got null child.\n" );
+            return retString;
+        }
+
+        if (transformerOrChildrenNode.getNodeName().contains("Iterat")) {
+            transformerOrChildrenNode = (Node) xPath.evaluate("./properties/children", transformerOrChildrenNode, XPathConstants.NODE);
+        }
+        if (transformerOrChildrenNode.getNodeName().equals( "elements" )
+                || transformerOrChildrenNode.getNodeName().equals ("children")) {
+            Node f = transformerOrChildrenNode.getFirstChild();
+            Node x = f;
+            do {
+                if (x == null) break;
+                if (x.getNodeName().contains("#text")){
+                    x = x.getNextSibling();
+                    if (x == null) break;
+                    else continue;//no op for #text nodes
+                }
+                NodeList ns = (NodeList) xPath.evaluate(
+                        "./*",
+                        x,
+                        XPathConstants.NODESET);
+		// put all data in a HashMap for the string to be formatted
+                HashMap<String, String> dataMap = new HashMap<>();
+                for (int m = 0; m < ns.getLength(); m++) {
+                    dataMap.put(ns.item(m).getNodeName(), ns.item(m).getTextContent());
+                }
+		// format the string as appropriate for the step type
+                if (x.getNodeName().contains("MapperStep")) {
+		    String fmt_temp = "%s%s %s Mapper: Put the value of %s (\"%s\" if empty) in %s map with key %s.%s\n";
+                    retString.append(String.format(
+			fmt_temp,
+			start,
+			dataMap.get("sequenceNumber"),
+			dataMap.get("enabled").equals("true") ? "" : "!DISABLED!",
+			abbreviateHL7(dataMap.get("mapping")),
+			dataMap.get("defaultValue"),
+			dataMap.get("scope").toLowerCase(),
+			dataMap.get("variable"),
+			end
+                    ));
+                } else if (x.getNodeName().contains("RuleBuilderRule")) {
+		    String op = dataMap.get("operator");
+		    if (op == null) op = " ";
+		    String fmt_temp = "%s%s %s %s Filter rule: The value of %s %s %s.%s\n";
+                    retString.append( String.format(
+			fmt_temp,
+			start,
+			op,
+			dataMap.get("sequenceNumber"),
+			dataMap.get("enabled").equals("true") ? "" : "!DISABLED!",
+			abbreviateHL7(dataMap.get("field")),
+			abbreviateHL7(dataMap.get("condition")),
+			dataMap.get("values"),
+			end
+                    ));
+                } else if (x.getNodeName().contains("MessageBuilderStep")) {
+		    String fmt_temp = "%s %s %s MessageBuilder: Put the value of %s (\"%s\" if empty) into %s.\n%s";
+		    retString.append( String.format(
+			fmt_temp,
+			start,
+			dataMap.get("sequenceNumber"),
+			dataMap.get("enabled").equals("true") ? "" : "!DISABLED!",
+			abbreviateHL7(dataMap.get("mapping")),
+			dataMap.get("defaultValue"),
+			abbreviateHL7(dataMap.get("messageSegment")),
+			end
+                    ));
+                } else if (x.getNodeName().contains("Java")){
+		    String fmt_temp = "%s%s %s JavaScript:\n%s\n%s"; 
+                    retString.append(String.format(
+		        fmt_temp,
+			start,
+			dataMap.get("sequenceNumber"),
+			dataMap.get("enabled").equals("true") ? "" : "!DISABLED!",
+			"<pre>"+dataMap.get("script")+"</pre>",
+			end
+		    ));
+		    
+                    retString.append(dataMap);
+
+                } else if (x.getNodeName().contains("External")){
+		    String fmt_temp = "%s%s %s JavaScript from path:\n%s\n%s";
+                     retString.append(String.format(
+			  fmt_temp,
+			  start,
+			  dataMap.get("sequenceNumber"),
+			  dataMap.get("enabled").equals("true") ? "" : "!DISABLED!",
+			  dataMap.get("scriptPath"),
+			  end
+		    ));
+		     
+
+                } else if (x.getNodeName().contains("IteratorStep")) {
+		    retString.append(start);
+                    retString.append((String) xPath.evaluate("./sequenceNumber",x,XPathConstants.STRING));
+                    retString.append("  Loop: " );
+                    retString.append( (String) xPath.evaluate("./name",x,XPathConstants.STRING) );
+                    //retString.append( " \n" );
+		    //start another <ul> in this item retString.append(end);
+		    retString.append("<ul>");
+                    retString.append( getElements((Node) xPath.evaluate("./properties/children", x, XPathConstants.NODE),html));
+		    retString.append("</ul>");
+                    //retString.append( "] (end loop)\n" );
+		    retString.append(end);
+                } else if (x.getNodeName().contains("IteratorRule")) {
+                    retString.append((String) xPath.evaluate("./sequenceNumber",x,XPathConstants.STRING));
+		    retString.append(start);
+                    retString.append("  Loop: " );
+                    retString.append( (String) xPath.evaluate("./name",x,XPathConstants.STRING) );
+                    retString.append( " (do bracketed items in each loop pass) [\n" );
+		    retString.append(end);
+                    retString.append( getElements((Node) xPath.evaluate("./properties/children", x, XPathConstants.NODE),html));
+		    retString.append(start);
+                    retString.append( "] (end loop)\n" );
+		    retString.append(end);
+                } else {
+		    retString.append(start);
+                    retString.append(String.format(
+		     "%s %s:",
+		     dataMap.get("sequenceNumber"),
+		     x.getNodeName()
+		    ));
+                    retString.append(dataMap);
+		    retString.append(end);
+                }
+                if ( x == f.getLastChild()) break;
+                x = x.getNextSibling();
+                if (x == null)break;
+
+            } while (true);
+
+        }
+        return retString;
+    }
+    static String abbreviateHL7(String inString){
+        String[] stringArray = inString.split("\\Q['\\E");
+        if (stringArray.length >= 4) {
+            return stringArray[0] + " " + stringArray[stringArray.length - 1].replace("']","").replace(".toString()","");
+        } else {
+            return inString;
+        }
+    }
+}

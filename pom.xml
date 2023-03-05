@@ -58,9 +58,9 @@
         <processor.aggregator.path>distribution/aggregated.json</processor.aggregator.path>
 
         <!-- Plugin details -->
-        <plugin.path>plugintest</plugin.path>
+        <plugin.path>searchsummary</plugin.path>
         <plugin.name>Search summary plugin</plugin.name>
-        <plugin.url>www.com</plugin.url>
+        <plugin.url>www.mitchtrachtenberg.com</plugin.url>
 	<plugin.author>Mitch Trachtenberg</plugin.author>
         <plugin.version>15</plugin.version>
         <plugin.mirthVersion>4.2.0</plugin.mirthVersion>
