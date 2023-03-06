@@ -114,6 +114,7 @@ public class Summarize {
 	sb.append("<script src=\"https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js\"></script>");
 	sb.append("<script>  $( function() {\n");
 	sb.append("$( \"#accordion\" ).accordion({\n");
+	sb.append("active: \"false\",\n");
 	sb.append("heightStyle: \"content\",\n");
 	sb.append("collapsible: \"true\"\n");
 	sb.append("});\n");
@@ -122,6 +123,7 @@ public class Summarize {
 	sb.append("$( function() {\n");
 	sb.append("$( \".accordion2\" ).accordion({\n");
 	sb.append("heightStyle: \"content\",\n");
+	sb.append("active: \"false\",\n");
 	sb.append("collapsible: \"true\"\n");
 	sb.append("});\n");
 	sb.append("} );\n");
@@ -129,6 +131,7 @@ public class Summarize {
 	sb.append("$( function() {\n");
 	sb.append("$( \".accordion3\" ).accordion({\n");
 	sb.append("heightStyle: \"content\",\n");
+	sb.append("active: \"false\",\n");
 	sb.append("collapsible: \"true\"\n");
 	sb.append("});\n");
 	sb.append("} );\n");
@@ -159,48 +162,68 @@ public class Summarize {
 
 	ChannelProperties props = channel.getProperties();
 
-
-	String channelStr = ("<h3>" + channel.getName() + "</h3>\n");
-	channelStr += "<div>\n";//creates inner div for accordion
-	channelStr += "<div class=\"accordion2\">\n";
-        channelStr += ("<h4>Description: " + descriptionLength + " chars </h4>\n<div>\n<pre>"  + escapeHTML(description) + "</pre>\n</div>\n");
-	channelStr += ("<h4>PreprocessingScript: " +  preprocessingScriptLength + " chars </h4>\n");
-	channelStr += ("<div>\n<pre>" + escapeHTML(preprocessingScript) + "</pre>\n</div>\n");
-	channelStr += ("<h4>PostprocessingScript: "+ postprocessingScriptLength +" chars</h4>\n");
-	channelStr += ("<div>\n<pre>"  + escapeHTML(postprocessingScript) + "</pre>\n</div>\n");
-	channelStr += ("<h4>DeployScript: " + deployScriptLength + " chars</h4>\n");
-	channelStr += ("<div>\n<pre>" + escapeHTML(deployScript) + "</pre>\n</div>\n");
-	channelStr += ("<h4>UndeployScript: " + undeployScriptLength + " chars</h4>\n");
-	channelStr += ("<div>\n<pre>" + escapeHTML(undeployScript) + "</pre>\n</div>\n");
+	StringBuilder channelStr = new StringBuilder();
+	channelStr.append( "<h3>" + channel.getName() + "</h3>\n");
+	channelStr.append( "<div>\n" );//creates inner div for accordion
+	channelStr.append( "<div class=\"accordion2\">\n" );
+        channelStr.append( "<h4>Description: " );
+        channelStr.append( String.valueOf(descriptionLength) );
+	channelStr.append( " chars </h4>\n<div>\n<pre>" );
+	channelStr.append( escapeHTML(description) );
+	channelStr.append( "</pre>\n</div>\n" );
+	channelStr.append( "<h4>PreprocessingScript: " );
+	channelStr.append( String.valueOf(preprocessingScriptLength) );
+	channelStr.append( " chars </h4>\n" );
+	channelStr.append( "<div>\n<pre>" );
+	channelStr.append( escapeHTML(preprocessingScript) );
+	channelStr.append( "</pre>\n</div>\n" );
+	channelStr.append( "<h4>PostprocessingScript: " );
+	channelStr.append( String.valueOf(postprocessingScriptLength) );
+	channelStr.append( " chars</h4>\n" );
+	channelStr.append( "<div>\n<pre>" );
+	channelStr.append( escapeHTML(postprocessingScript) );
+	channelStr.append( "</pre>\n</div>\n" );
+	channelStr.append( "<h4>DeployScript: " );
+	channelStr.append( String.valueOf(deployScriptLength) );
+	channelStr.append( " chars</h4>\n" );
+	channelStr.append("<div>\n<pre>" );
+	channelStr.append( escapeHTML(deployScript) );
+	channelStr.append( "</pre>\n</div>\n" );
+	channelStr.append( "<h4>UndeployScript: " );
+	channelStr.append( undeployScriptLength + " chars" );
+	channelStr.append( "</h4>\n" );
+	channelStr.append("<div>\n<pre>" );
+	channelStr.append( escapeHTML(undeployScript) );
+	channelStr.append( "</pre>\n</div>\n" );
 	try {
 		if(props != null){
 		    String propStrXML = ObjectXMLSerializer.getInstance().serialize(props);
 		    String propStrResult = get_xml(propStrXML,"//*[not(@*)]");
-		    channelStr += "<h4>Channel properties</h4>\n";
-		    channelStr += ("<div><pre>" + propStrResult +  "</pre>\n</div>\n");
+		    channelStr.append( "<h4>Channel properties</h4>\n" );
+		    channelStr.append( "<div><pre>" );
+		    channelStr.append( propStrResult );
+		    channelStr.append( "</pre>\n</div>\n" );
 		}
-	    } catch (Exception e){
-		System.out.println(e);
-	    }
+	} catch (Exception e){
+	    System.out.println(e);
+	}
         List<Connector> connList = channel.getDestinationConnectors();
 	connList.add(0,channel.getSourceConnector());
 	for (Connector conn: connList){
-	    channelStr += ("<h4><b>CONNECTOR</b> " + conn.getName() + " (" + conn.getTransportName() + ")</h4>\n");
-	    channelStr += "<div>\n"; // conn contents division starts
-	    channelStr += "<div class=\"accordion3\">\n"; // acc3 starts
+	    channelStr.append( "<h4><b>CONNECTOR</b> " + conn.getName() + " (" + conn.getTransportName() + ")</h4>\n");
+	    channelStr.append( "<div>\n" ); // conn contents division starts
+	    channelStr.append( "<div class=\"accordion3\">\n" ); // acc3 starts
 	    ConnectorProperties p = conn.getProperties();
 	    try {
 		if(p != null){
 		    String propStrXML = ObjectXMLSerializer.getInstance().serialize(p);
 		    String propStrResult = get_xml(propStrXML,"//*[not(@*)]");
-		    channelStr += "<h4>Connector properties</h4>\n";
-		    channelStr += ("<div><pre>" + propStrResult +  "</pre>\n</div>\n");
+		    channelStr.append( "<h4>Connector properties</h4>\n" );
+		    channelStr.append( "<div><pre>" + propStrResult +  "</pre>\n</div>\n" );
 		}
 	    } catch (Exception e){
 		System.out.println(e);
 	    }
-
-
 	    try {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		// optional, but recommended
@@ -216,26 +239,26 @@ public class Summarize {
 		Document doc = db.parse(is);
 		doc.getDocumentElement().normalize();
 
-		channelStr += ("<h4>Connector filter elements </h4>");
-		channelStr += "<div>";
-		channelStr += "<ul>";
-		channelStr += generateElements(doc,"filter",true);
-		channelStr += "</ul></div>\n";
-		channelStr += ("<h4>Connector transformer elements </h4>");
-		channelStr += "<div>";
-		channelStr += "<ul>";
-		channelStr += generateElements(doc,"transformer",true);
-		channelStr += "</ul></div>\n";
-		channelStr += "</div>\n"; //ends accordion3 div
-		channelStr += "</div>\n"; //ends inner div with conn contents
+		channelStr.append( "<h4>Connector filter elements </h4>" );
+		channelStr.append( "<div>" );
+		channelStr.append( "<ul>" );
+		channelStr.append( generateElementList(doc,"filter",true) );
+		channelStr.append( "</ul></div>\n" );
+		channelStr.append( "<h4>Connector transformer elements </h4>" );
+		channelStr.append( "<div>" );
+		channelStr.append( "<ul>" );
+		channelStr.append( generateElementList(doc,"transformer",true) );
+		channelStr.append( "</ul></div>\n" );
+		channelStr.append( "</div>\n" ); //ends accordion3 div
+		channelStr.append( "</div>\n" ); //ends inner div with conn contents
 	    } catch (Exception e) {
 		//System.out.println("Problem with rule or step list");
 		//System.out.println(e);
 	    }
 	} // end for loop
-	channelStr += "</div>\n"; //ends accordion2 div for scripts, connectors
-	channelStr += "</div>\n"; //ends accordion div for channel
-	return channelStr;
+	channelStr.append("</div>\n" ); //ends accordion2 div for scripts, connectors
+	channelStr.append( "</div>\n" ); //ends accordion div for channel
+	return channelStr.toString();
     }
     static String escapeHTML(String s) {
 	StringBuilder out = new StringBuilder(Math.max(16, s.length()));
@@ -253,11 +276,8 @@ public class Summarize {
     }
     
     
-    // IMPORTED FROM MAIN.JAVA
+    static String generateElementList(Document doc, String eltype, boolean html){
 
-    static String generateElements(Document doc, String eltype, boolean html){
-
-        //System.out.println("Hello world!");
         StringBuilder retString = new StringBuilder();
         try {
 
@@ -267,7 +287,6 @@ public class Summarize {
 			     String.format("//%s/elements",eltype),
 			     doc,
 			     XPathConstants.NODESET);
-	     //System.out.println("Num transformer/elements " + parents.getLength());
 	     for (int i = 0; i < parents.getLength(); i++) {
 		 retString.append(getElements(parents.item(i),true));
                 }
@@ -276,6 +295,7 @@ public class Summarize {
         }
         return( retString.toString() );
     }
+
     // getElements: return text describing transformer elements,
     // including those elements on the children list of iterators
     // Call on each descendant of ..../transformer|filterI'm /elements
@@ -367,8 +387,8 @@ public class Summarize {
 			"<pre>"+dataMap.get("script")+"</pre>",
 			end
 		    ));
-		    
-                    retString.append(dataMap);
+		    // raw data is in script, above
+                    // retString.append(dataMap);
 
                 } else if (x.getNodeName().contains("External")){
 		    String fmt_temp = "%s%s %s JavaScript from path:\n%s\n%s";
@@ -425,9 +445,22 @@ public class Summarize {
         return retString;
     }
     static String abbreviateHL7(String inString){
+	// typical HL7 usage:
+	//   msg['PID']['PID.5']['PID.5.2'].toString()
+	// will be abbreviated to:
+	//   msg PID.5.2
+	// to reduce needless intimidation.
+	// Split string at [' and abbreviate if at least three occurrences
+	// and first and second occurrence begin with same three letters.
+	// abbreviation takes material before the first occurrence,
+	// (likely msg or tmp)
+	// and adds the last occurrence and removes .toString()
+	// (likely SEG.n.m or SEG.n.m.o)
         String[] stringArray = inString.split("\\Q['\\E");
-        if (stringArray.length >= 4) {
-            return stringArray[0] + " " + stringArray[stringArray.length - 1].replace("']","").replace(".toString()","");
+        if ((stringArray.length >= 4)
+	    &&
+	    (stringArray[1].substring(0,3) == stringArray[2].substring(0,3))){
+		return stringArray[0] + " " + stringArray[stringArray.length - 1].replace("']","").replace(".toString()","");
         } else {
             return inString;
         }
