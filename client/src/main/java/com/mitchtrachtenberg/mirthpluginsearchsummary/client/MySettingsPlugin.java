@@ -23,6 +23,7 @@ import com.mirth.connect.client.ui.AbstractSettingsPanel;
 import com.mirth.connect.plugins.SettingsPanelPlugin;
 import com.mirth.connect.model.converters.ObjectXMLSerializer;
 
+
 @ClientClass
 public class MySettingsPlugin extends SettingsPanelPlugin {
 
@@ -44,7 +45,7 @@ public class MySettingsPlugin extends SettingsPanelPlugin {
 
     @Override
     public void start() {
-        System.out.println("MySettingsPlugin start()");
+        System.out.println("MySettingsPlugin calling overriden method start()");
         this.mainSettingsPanel = new MainSettingsPanel();
     }
 
@@ -57,4 +58,5 @@ public class MySettingsPlugin extends SettingsPanelPlugin {
     public void reset() {
 
     }
+
 }

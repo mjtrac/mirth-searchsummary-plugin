@@ -33,7 +33,7 @@ public class MyServicePlugin implements ServicePlugin {
 
     @Override
     public void init(Properties properties) {
-        System.out.println("Hello world from init!");
+        System.out.println("Searchstart class MyServicePlugin empty method init called.");
     }
 
     @Override
@@ -70,11 +70,11 @@ public class MyServicePlugin implements ServicePlugin {
 
     @Override
     public void start() {
-        System.out.println("Hello world from start!");
+        System.out.println("Searchstart class MyServicePlugin empty method start called.");
     }
 
     @Override
     public void stop() {
-        System.out.println("Good bye world!");
+        System.out.println("Searchstart class MyServicePlugin empty method stop called.");
     }
 }

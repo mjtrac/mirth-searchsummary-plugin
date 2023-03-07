@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import com.mirth.connect.model.ChannelProperties;
 import com.mirth.connect.model.Channel;
+import com.mirth.connect.model.ChannelExportData;
 import com.mirth.connect.model.Connector;
 import com.mirth.connect.model.Filter;
 import com.mirth.connect.model.Rule;
@@ -161,7 +162,7 @@ public class Summarize {
 	int postprocessingScriptLength = postprocessingScript.length();
 
 	ChannelProperties props = channel.getProperties();
-
+	ChannelExportData ed = channel.getExportData();
 	StringBuilder channelStr = new StringBuilder();
 	channelStr.append( "<h3>" + channel.getName() + "</h3>\n");
 	channelStr.append( "<div>\n" );//creates inner div for accordion
@@ -198,10 +199,26 @@ public class Summarize {
 	try {
 		if(props != null){
 		    String propStrXML = ObjectXMLSerializer.getInstance().serialize(props);
-		    String propStrResult = get_xml(propStrXML,"//*[not(@*)]");
+		    //String propStrResult = get_xml(propStrXML,"//*[not(@*)]");
+		    String propStrResult = get_xml(propStrXML,"//*[count(*)=0]");
+		    
 		    channelStr.append( "<h4>Channel properties</h4>\n" );
 		    channelStr.append( "<div><pre>" );
 		    channelStr.append( propStrResult );
+		    channelStr.append( "</pre>\n</div>\n" );
+		}
+	} catch (Exception e){
+	    System.out.println(e);
+	}
+	try {
+		if(ed != null){
+		    String edStrXML = ObjectXMLSerializer.getInstance().serialize(ed);
+		    //String propStrResult = get_xml(propStrXML,"//*[not(@*)]");
+		    String edStrResult = get_xml(edStrXML,"//*[count(*)=0]");
+		    
+		    channelStr.append( "<h4>Channel export data</h4>\n" );
+		    channelStr.append( "<div><pre>" );
+		    channelStr.append( edStrResult );
 		    channelStr.append( "</pre>\n</div>\n" );
 		}
 	} catch (Exception e){
@@ -217,7 +234,8 @@ public class Summarize {
 	    try {
 		if(p != null){
 		    String propStrXML = ObjectXMLSerializer.getInstance().serialize(p);
-		    String propStrResult = get_xml(propStrXML,"//*[not(@*)]");
+		    //String propStrResult = get_xml(propStrXML,"//*[not(@*)]");
+		    String propStrResult = get_xml(propStrXML,"//*[count(*)=0]");
 		    channelStr.append( "<h4>Connector properties</h4>\n" );
 		    channelStr.append( "<div><pre>" + propStrResult +  "</pre>\n</div>\n" );
 		}
@@ -238,15 +256,21 @@ public class Summarize {
 			     ObjectXMLSerializer.getInstance().serialize(conn)));
 		Document doc = db.parse(is);
 		doc.getDocumentElement().normalize();
-
-		channelStr.append( "<h4>Connector filter elements </h4>" );
+		Double filterCount= generateElementListCount(doc,"filter",true);
+		Double transformerCount= generateElementListCount(doc,"transformer",true);
+		channelStr.append( "<h4>Connector filter elements ");
+		channelStr.append( filterCount.intValue());
+		channelStr.append( "</h4>" );
 		channelStr.append( "<div>" );
 		channelStr.append( "<ul>" );
 		channelStr.append( generateElementList(doc,"filter",true) );
 		channelStr.append( "</ul></div>\n" );
-		channelStr.append( "<h4>Connector transformer elements </h4>" );
+		channelStr.append( "<h4>Connector transformer elements " );
+		channelStr.append( transformerCount.intValue());
+		channelStr.append( "</h4>");
 		channelStr.append( "<div>" );
 		channelStr.append( "<ul>" );
+
 		channelStr.append( generateElementList(doc,"transformer",true) );
 		channelStr.append( "</ul></div>\n" );
 		channelStr.append( "</div>\n" ); //ends accordion3 div
@@ -275,6 +299,23 @@ public class Summarize {
 	return out.toString();
     }
     
+    
+    static Double generateElementListCount(Document doc, String eltype, boolean html){
+	Double numChildren = 0.0;
+        try {
+             HashMap<String,String> strings = new HashMap<>();
+	     XPath xPath = XPathFactory.newInstance().newXPath();
+	     numChildren = (Double) xPath.evaluate(
+			     String.format("count(//%s/elements//sequenceNumber)",eltype),
+			     doc,
+			     XPathConstants.NUMBER);
+         } catch (Exception e) {
+	    System.out.println(numChildren);
+	    
+            System.out.println(e.getMessage());
+        }
+	return (numChildren);
+    }
     
     static String generateElementList(Document doc, String eltype, boolean html){
 
@@ -450,17 +491,20 @@ public class Summarize {
 	// will be abbreviated to:
 	//   msg PID.5.2
 	// to reduce needless intimidation.
-	// Split string at [' and abbreviate if at least three occurrences
+	// Split string at [ and abbreviate if at least three occurrences
 	// and first and second occurrence begin with same three letters.
 	// abbreviation takes material before the first occurrence,
 	// (likely msg or tmp)
 	// and adds the last occurrence and removes .toString()
 	// (likely SEG.n.m or SEG.n.m.o)
-        String[] stringArray = inString.split("\\Q['\\E");
-        if ((stringArray.length >= 4)
-	    &&
-	    (stringArray[1].substring(0,3) == stringArray[2].substring(0,3))){
-		return stringArray[0] + " " + stringArray[stringArray.length - 1].replace("']","").replace(".toString()","");
+	
+        String[] stringArray = inString.split("\\Q[\\E");
+	
+	if ((stringArray.length >= 4)
+	    //&&
+	    //(stringArray[1].substring(0,3) == stringArray[2].substring(0,3))
+	    ){
+	    return stringArray[0] + " " + stringArray[stringArray.length - 1].replace("']","").replace("\\\"]","").replace(".toString()","").substring(1);
         } else {
             return inString;
         }

@@ -47,10 +47,16 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
+
+
 import javax.swing.SwingWorker;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
+
+import java.util.ArrayList;
 
 import com.mirth.connect.client.ui.AbstractSettingsPanel;
 import com.mirth.connect.client.ui.PlatformUI;
@@ -104,8 +110,8 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
     public MainSettingsPanel() {
         // The name of our tab in the Settings menu
         super(MyConstants.SETTINGS_TABNAME_MAIN);
-        addTask("doSearch", "Do Search", "Do Search.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png")));
-        addTask("doChannel", "Do Channel", "Do Channel.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png")));
+        //addTask("doSearch", "Do Search", "Do Search.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png")));
+        addTask("doChannel", "Browse channel docs", "Browse channel docs.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png")));
         initComponents();
     }
 
@@ -168,15 +174,23 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         
         //List Area to choose channel
         JList list = new JList();
-        String[] channelNameList;
-        channelNameList = new String[20];
+	java.util.ArrayList channelNameArrayList = new ArrayList();
+        //String[] channelNameList;
+        //channelNameList = new String[200];
         int i = 0;
-        //for (Channel channel: channels){
-        //	channelNameList[i++] = channel.getName();
-        channelNameList[0] = "alpha";
-        channelNameList[1] = "beta";
-        list.setListData(channelNameList);
-        
+	try {
+	    for (Channel channel: 								   PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels()){
+		channelNameArrayList.add(channel.getName());
+		//channelNameList[i++] = channel.getName();
+		//channelNameList[0] = "alpha";
+		//channelNameList[1] = "beta";
+	    }
+	    String[] channelNameList = new String[channelNameArrayList.size()];
+	    list.setListData(channelNameArrayList.toArray());
+
+	} catch (Exception e){
+	    System.out.println(e.toString());
+	}        
         MouseListener mouseListener = new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -214,14 +228,26 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
                 worker.execute();
             }
         });
-        //Split pane to house list and HTML display scrolled panes
+	JPanel panel = new JPanel(new MigLayout());
+
+	panel.add(new JLabel("<html><h2>None of the controls are implemented,</h2> <h3>use Browse channel docs in menu at left: </h3></html>"), "wrap" );
+	panel.add(new JCheckBox("HTML output?"), "wrap");
+	panel.add(new JLabel("Search string: " ));
+	panel.add(new JTextField("empty"),"span");
+        //Split pane to house list and
+	//control panel widgets.
+	//HTML display scrolled panes
         JSplitPane split = new JSplitPane(
         		JSplitPane.HORIZONTAL_SPLIT,
                 listScroll, 
-                scroll);
+			//        scroll);
+			panel);
 
+	
+        this.add(button,BorderLayout.PAGE_END);
         this.add(split,BorderLayout.CENTER);
-        this.add(button,BorderLayout.SOUTH);
+	//this.pack();
+	this.setVisible(true);
 	/*
         //p.add(split,BorderLayout.CENTER);
         //p.add(button,BorderLayout.SOUTH);

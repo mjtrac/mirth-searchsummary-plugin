@@ -60,7 +60,7 @@
         <!-- Plugin details -->
         <plugin.path>searchsummary</plugin.path>
         <plugin.name>Search summary plugin</plugin.name>
-        <plugin.url>www.mitchtrachtenberg.com</plugin.url>
+	<plugin.url>https://www.mitchtrachtenberg.com</plugin.url>
 	<plugin.author>Mitch Trachtenberg</plugin.author>
         <plugin.version>15</plugin.version>
         <plugin.mirthVersion>4.2.0</plugin.mirthVersion>
