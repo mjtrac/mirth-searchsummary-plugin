@@ -64,80 +64,78 @@ public class Search {
 	return (name);
     }
 
-    static String get_xml(String xmlString, String searchString){
-	StringBuilder sb = new StringBuilder();
-	try {
-	    
-	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-          // optional, but recommended
-          // process XML securely, avoid attacks like XML External Entities (XXE)
-	    dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+	static String get_xml(String xmlString, String searchString) {
+		StringBuilder sb = new StringBuilder();
+		try {
 
-          // parse XML string
-	    DocumentBuilder db = dbf.newDocumentBuilder();
-	    InputSource is = new InputSource(new StringReader(xmlString));
-	    Document doc = db.parse(is);
-	    doc.getDocumentElement().normalize();
-	    XPath xPath = XPathFactory.newInstance().newXPath();
-	    NodeList nodes = (NodeList)xPath.evaluate(
-						      searchString,
-						      doc,
-						      XPathConstants.NODESET);
-	    //System.out.println(nodes.size());
-	    int nodeListLen = nodes.getLength();
-	    for (int i = 0; i < nodeListLen ; i++){
-		Node n = nodes.item(i);
-		Node p = nodes.item(i);
-		short nType = n.getNodeType();
-		String path="";
-		while (p != null) {
-		    String nodeName = p.getNodeName();
-		    if (nodeName == "connector" || nodeName=="channel"){
-			nodeName += ("(" + generateName(p)+")");// find the sequence number and or name child node, and add its text
-		    }
-		    path = nodeName +  "/" + path;
-		    p = p.getParentNode();
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+			// parse XML string
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			InputSource is = new InputSource(new StringReader(xmlString));
+			Document doc = db.parse(is);
+			doc.getDocumentElement().normalize();
+			XPath xPath = XPathFactory.newInstance().newXPath();
+			NodeList nodes = (NodeList) xPath.evaluate(
+					searchString,
+					doc,
+					XPathConstants.NODESET);
+			int nodeListLen = nodes.getLength();
+			for (int i = 0; i < nodeListLen; i++) {
+				Node n = nodes.item(i);
+				Node p = nodes.item(i);
+				short nType = n.getNodeType();
+				String path = "";
+				while (p != null) {
+					String nodeName = p.getNodeName();
+					if (nodeName == "connector" || nodeName == "channel") {
+						// find the sequence number and or name child node, and add its text
+						nodeName += ("(" + generateName(p) + ")");
+					}
+					path = nodeName + "/" + path;
+					p = p.getParentNode();
+				}
+				path = path.replaceAll("#document/", "");
+				//path = path.replaceAll("com.mirth.connect.plugins.","");
+				//path = path.replaceAll("com.mirth.connect.connectors.","...");
+
+				sb.append(path + " = " + n.getTextContent() + "\n");
+			}
+
+		} catch (Exception e) {
+			System.out.println(e);
 		}
-		path = path.replaceAll("#document/","");
-		//path = path.replaceAll("com.mirth.connect.plugins.","");
-		//path = path.replaceAll("com.mirth.connect.connectors.","...");
-		
-		sb.append( path + " = " + n.getTextContent()+ "\n");
-	    }
-						      
-	} catch (Exception e){
-	    System.out.println(e);
+		return (sb.toString());
 	}
-	return(sb.toString());
-    }
-    
-    
-    static String valueSearch(Channel channel, String searchString){
-	StringBuilder sb = new StringBuilder();
-     	try {
-	    String chXML = ObjectXMLSerializer.getInstance().serialize(channel);
-	    String searchOn = "//*[contains(normalize-space(text()),'"+searchString+"')]";
-	    String matches = get_xml(chXML, searchOn);
-	    if (matches.length() > 0){
-		sb.append(matches);
-	    }
-	} catch (Exception e){
-	    return (e.toString());
+
+	static String valueSearch(Channel channel, String searchString) {
+		StringBuilder sb = new StringBuilder();
+		try {
+			String chXML = ObjectXMLSerializer.getInstance().serialize(channel);
+			String searchOn = "//*[contains(normalize-space(text()),'" + searchString + "')]";
+			String matches = get_xml(chXML, searchOn);
+			if (matches.length() > 0) {
+				sb.append(matches);
+			}
+		} catch (Exception e) {
+			return (e.toString());
+		}
+		return (sb.toString());
 	}
-	return(sb.toString());
-    }
-    static String keySearch(Channel channel, String searchString){
-	StringBuilder sb = new StringBuilder();
-     	try {
-	    String chXML = ObjectXMLSerializer.getInstance().serialize(channel);
-	    String searchOn = "//"+searchString;
-	    String matches = get_xml(chXML, searchOn);
-	    if (matches.length() > 0){
-		sb.append(matches);
-	    }
-	} catch (Exception e){
-	    return (e.toString());
+
+	static String keySearch(Channel channel, String searchString) {
+		StringBuilder sb = new StringBuilder();
+		try {
+			String chXML = ObjectXMLSerializer.getInstance().serialize(channel);
+			String searchOn = "//" + searchString;
+			String matches = get_xml(chXML, searchOn);
+			if (matches.length() > 0) {
+				sb.append(matches);
+			}
+		} catch (Exception e) {
+			return (e.toString());
+		}
+		return (sb.toString());
 	}
-	return(sb.toString());
-    }
 }
