@@ -44,6 +44,25 @@ import javax.xml.xpath.*;
 import javax.xml.xpath.XPathConstants;
 
 public class Search {
+    static String generateName(Node n){
+	String name = "?";
+        try {
+	    NodeList nodes = n.getChildNodes();
+	    Node nameNode;
+	    for (int x = 0; x < nodes.getLength(); x++){
+		if (nodes.item(x).getNodeName().equals("name")){
+		    nameNode = nodes.item(x);
+		    name = nameNode.getFirstChild().getNodeValue();
+		    break;
+		}
+	    }
+         } catch (Exception e) {
+	    System.out.println(name);
+	    
+            System.out.println(e.getMessage());
+        }
+	return (name);
+    }
 
     static String get_xml(String xmlString, String searchString){
 	StringBuilder sb = new StringBuilder();
@@ -72,7 +91,11 @@ public class Search {
 		short nType = n.getNodeType();
 		String path="";
 		while (p != null) {
-		    path = p.getNodeName() +  "/" + path;
+		    String nodeName = p.getNodeName();
+		    if (nodeName == "connector" || nodeName=="channel"){
+			nodeName += ("(" + generateName(p)+")");// find the sequence number and or name child node, and add its text
+		    }
+		    path = nodeName +  "/" + path;
 		    p = p.getParentNode();
 		}
 		path = path.replaceAll("#document/","");
@@ -80,8 +103,8 @@ public class Search {
 		//path = path.replaceAll("com.mirth.connect.connectors.","...");
 		
 		sb.append( path + " = " + n.getTextContent()+ "\n");
-		
 	    }
+						      
 	} catch (Exception e){
 	    System.out.println(e);
 	}
@@ -89,28 +112,28 @@ public class Search {
     }
     
     
-    static String generate_search(Channel channel, String searchString){
+    static String valueSearch(Channel channel, String searchString){
 	StringBuilder sb = new StringBuilder();
      	try {
 	    String chXML = ObjectXMLSerializer.getInstance().serialize(channel);
 	    String searchOn = "//*[contains(normalize-space(text()),'"+searchString+"')]";
-
 	    String matches = get_xml(chXML, searchOn);
 	    if (matches.length() > 0){
-		sb.append("ON PROPERTY VALUE in ");
-		sb.append(channel.getName());
-		sb.append("\n");
 		sb.append(matches);
-		sb.append("\n");
 	    }
-	    searchOn = "//"+searchString;
-	    matches = get_xml(chXML, searchOn);
+	} catch (Exception e){
+	    return (e.toString());
+	}
+	return(sb.toString());
+    }
+    static String keySearch(Channel channel, String searchString){
+	StringBuilder sb = new StringBuilder();
+     	try {
+	    String chXML = ObjectXMLSerializer.getInstance().serialize(channel);
+	    String searchOn = "//"+searchString;
+	    String matches = get_xml(chXML, searchOn);
 	    if (matches.length() > 0){
-		sb.append("ON PROPERTY NAME in ");
-		sb.append(channel.getName());
-		sb.append("\n");
 		sb.append(matches);
-		sb.append("\n");
 	    }
 	} catch (Exception e){
 	    return (e.toString());

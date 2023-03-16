@@ -52,7 +52,11 @@ public class Summarize {
 		short nType = n.getNodeType();
 		String path="";
 		while (p != null) {
-		    path = p.getNodeName() +  "/" + path;
+		    String nodeName = p.getNodeName();
+		    if (nodeName == "connector"){
+			nodeName += ("(" + generateName(p)+")");// find the sequence number and or name child node, and add its text
+		    }
+		    path = nodeName +  "/" + path;
 		    p = p.getParentNode();
 		}
 		path = path.replaceAll("#document/","");
@@ -238,6 +242,7 @@ public class Summarize {
 		doc.getDocumentElement().normalize();
 		Double filterCount= generateElementListCount(doc,"filter",true);
 		Double transformerCount= generateElementListCount(doc,"transformer",true);
+		Double responseTransformerCount= generateElementListCount(doc,"responseTransformer",true);
 		channelStr.append( "<h4>Connector filter elements ");
 		channelStr.append( filterCount.intValue());
 		channelStr.append( "</h4>" );
@@ -245,13 +250,25 @@ public class Summarize {
 		channelStr.append( "<ul>" );
 		channelStr.append( generateElementList(doc,"filter",true) );
 		channelStr.append( "</ul></div>\n" );
-		channelStr.append( "<h4>Connector transformer elements " );
+
+		channelStr.append( "<h4>Connector transformer elements (" );
 		channelStr.append( transformerCount.intValue());
+		channelStr.append( ")");
 		channelStr.append( "</h4>");
 		channelStr.append( "<div>" );
 		channelStr.append( "<ul>" );
 
 		channelStr.append( generateElementList(doc,"transformer",true) );
+		channelStr.append( "</ul></div>\n" );
+		//channelStr.append( "</div>\n" ); //ends accordion3 div
+
+		channelStr.append( "<h4>Connector response transformer elements (" );
+		channelStr.append( responseTransformerCount.intValue());
+		channelStr.append( ")");
+		channelStr.append( "</h4>");
+		channelStr.append( "<div>" );
+		channelStr.append( "<ul>" );
+		channelStr.append( generateElementList(doc,"responseTransformer",true) );
 		channelStr.append( "</ul></div>\n" );
 		channelStr.append( "</div>\n" ); //ends accordion3 div
 		channelStr.append( "</div>\n" ); //ends inner div with conn contents
@@ -295,6 +312,26 @@ public class Summarize {
             System.out.println(e.getMessage());
         }
 	return (numChildren);
+    }
+    
+    static String generateName(Node n){
+	String name = "?";
+        try {
+	    NodeList nodes = n.getChildNodes();
+	    Node nameNode;
+	    for (int x = 0; x < nodes.getLength(); x++){
+		if (nodes.item(x).getNodeName().equals("name")){
+		    nameNode = nodes.item(x);
+		    name = nameNode.getNodeValue() + "," + nameNode.getFirstChild().getNodeValue();
+		    break;
+		}
+	    }
+         } catch (Exception e) {
+	    System.out.println(name);
+	    
+            System.out.println(e.getMessage());
+        }
+	return (name);
     }
     
     static String generateElementList(Document doc, String eltype, boolean html){

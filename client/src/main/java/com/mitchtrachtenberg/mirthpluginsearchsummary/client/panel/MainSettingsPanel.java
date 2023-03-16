@@ -123,9 +123,16 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
             public String doInBackground() {
                 StringBuilder sb = new StringBuilder();
                 try {
+		    sb.append("VALUES (may be substring -- HL7 matches HL7v2):\n");
                     for (Channel c : PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels()) {
-                        sb.append(Search.generate_search(c,jtf.getText()));
+                        sb.append(Search.valueSearch(c,jtf.getText()));
                     }
+		    sb.append("END of VALUE matches\n\n");
+		    sb.append("KEYS (must be exact match for a key):\n");
+                    for (Channel c : PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels()) {
+                        sb.append(Search.keySearch(c,jtf.getText()));
+                    }
+		    sb.append("END of KEY matches\n");
                 } catch (Exception e){
                     System.out.println(e.toString());
                 }
