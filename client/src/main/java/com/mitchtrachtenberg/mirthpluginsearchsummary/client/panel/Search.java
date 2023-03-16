@@ -97,7 +97,7 @@ public class Search {
 
 	    String matches = get_xml(chXML, searchOn);
 	    if (matches.length() > 0){
-		sb.append("ON PROPERTY VALUE:\n");
+		sb.append("ON PROPERTY VALUE in ");
 		sb.append(channel.getName());
 		sb.append("\n");
 		sb.append(matches);
@@ -106,7 +106,7 @@ public class Search {
 	    searchOn = "//"+searchString;
 	    matches = get_xml(chXML, searchOn);
 	    if (matches.length() > 0){
-		sb.append("ON PROPERTY NAME::\n");
+		sb.append("ON PROPERTY NAME in ");
 		sb.append(channel.getName());
 		sb.append("\n");
 		sb.append(matches);

@@ -111,7 +111,6 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         // The name of our tab in the Settings menu
         super(MyConstants.SETTINGS_TABNAME_MAIN);
         initComponents();
-        addTask("doSearch", "Do Search", "Do Search.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png")));
 
         addTask("doChannel", "Browse channel docs", "Browse channel docs.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png")));
 
@@ -119,13 +118,9 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
 
     public void doSearch(){
 
-        System.out.println("DO SEARCH PRESSED!");
         SwingWorker<String,Void> worker = new SwingWorker<String, Void>() {
             @Override
             public String doInBackground() {
-                System.out.println("DO SEARCH DO IN BACKGROUND");
-                System.out.println("JTF getText: " + jtf.getText());
-                System.out.println("JTA getText: " + jta.getText());
                 StringBuilder sb = new StringBuilder();
                 try {
                     for (Channel c : PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels()) {
@@ -134,14 +129,11 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
                 } catch (Exception e){
                     System.out.println(e.toString());
                 }
-                jta.setText(jtf.getText() + sb.toString());
-                System.out.println("JTF getText: " + jtf.getText());
-                System.out.println("JTA getText: " + jta.getText());
-                return ("hello");
+                jta.setText(sb.toString());
+                return("");
             }
             @Override
             public void done() {
-                System.out.println("DO SEARCH'S WORKER DONE.");
             }
 
         };
@@ -149,19 +141,13 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
     }
     
     public void doChannel(){
-        System.out.println("DO CHANNEL PRESSED, using Summarize.useDocumentHelper");
-	    System.out.println("DO CHANNEL PRESSED, STARTING WORKER");
         SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
 		@Override
 		public String doInBackground() {
 		    try {
-			System.out.println("CALLING SUMMARIZE.generate_all");
 			String channelStr = Summarize.generate_all(
-								   PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels());
-			System.out.println("BACK FROM SUMMARIZE.generate_all");
+			    PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels());
 			Path tempFile = Files.createTempFile(null, ".html");
-			System.out.println("WROTE " + tempFile);
-			System.out.println("Desktop.getDesktop()");
 			Desktop desk = Desktop.getDesktop();
 			Files.write(tempFile,
 				    channelStr.getBytes(
@@ -176,19 +162,13 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
 		}
 		@Override
 		public void done() {
-		    System.out.println("DO CHANNEL'S WORKER DONE.");
 		}
 	    };
 	worker.execute();
     }
 
-    private void initComponents() {
-        setBackground(Color.YELLOW);
-        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        setLayout(new BorderLayout());
 
-
-        
+    private void initChannelList(){
         //List Area to choose channel
         JList list = new JList();
 	java.util.ArrayList channelNameArrayList = new ArrayList();
@@ -213,19 +193,31 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
 	    }
         };
         list.addMouseListener(mouseListener);
+        return;
+    }
+    private void initHTMLEdit() {
+    }
+
+    private void initComponents() {
+        setBackground(Color.YELLOW);
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        setLayout(new BorderLayout());
+
+
         
-        JScrollPane listScroll = new JScrollPane(list);
-        JLabel label = new JLabel("Hello World");
 	JPanel panel = new JPanel(new MigLayout());
 
-	panel.add(new JLabel("<html><h2>Search across all channels</h2></html>"), "wrap" );
-	//panel.add(new JCheckBox("HTML output?"),"wrap");
-	panel.add(new JLabel("Search string: " ),"wrap");
+	// Search components
+	JLabel search_header = new JLabel("<html><h2>Search across all channels</h2></html>"); 
+	JLabel search_label = new JLabel("Search text: ");
+	JLabel search_results_label = new JLabel("Search results:");
 	this.jtf = new JTextField("",30);
-	panel.add(jtf);
+        JButton search_button = new JButton("Search");
+	this.jta = new JTextArea(10,100);
+	JScrollPane results_scroll = new JScrollPane(this.jta);
 
-        JButton button = new JButton("Search");
-        button.addActionListener(new ActionListener() {
+	// search on return key in text or on button press
+        search_button.addActionListener(new ActionListener() {
             @Override 
             public void actionPerformed(ActionEvent e) {
 		doSearch();
@@ -238,20 +230,27 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
             }
         });
 
-	panel.add(button, "wrap");
-	panel.add(new JLabel("Search results:"), "wrap");
-	this.jta = new JTextArea(10,128);
-	panel.add(jta, "span 2 12, grow");
-        //Split pane to house list and
-	//control panel widgets.
-	//HTML display scrolled panes
-        JSplitPane split = new JSplitPane(
-        		JSplitPane.HORIZONTAL_SPLIT,
-                listScroll, 
-			//        scroll);
-			panel);
+	// Lay out components, having text area take all excess space
+	panel.add(search_header, "wrap" );
 
-	this.add(split);
+	panel.add(search_label,"wrap");
+
+	panel.add(jtf, "split 2");
+	panel.add(search_button, "wrap");
+
+	panel.add(search_results_label, "wrap");
+	    
+	panel.add(results_scroll, "push, grow");
+
+        //Split pane to house channel list if desired
+        /*
+	  JSplitPane split = new JSplitPane(
+        		JSplitPane.HORIZONTAL_SPLIT,
+			listScroll, 
+			panel);
+	*/
+
+	this.add(panel);
 	this.setVisible(true);
         
     }
@@ -259,7 +258,7 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
     
     @Override
     public void doRefresh() {
-
+	// rebuild channel list if included
     }
 
     @Override
