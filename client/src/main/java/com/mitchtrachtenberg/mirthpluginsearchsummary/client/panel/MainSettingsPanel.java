@@ -19,16 +19,12 @@ package com.mitchtrachtenberg.mirthpluginsearchsummary.client.panel;
 
 import com.mitchtrachtenberg.mirthpluginsearchsummary.shared.MyConstants;
 import com.mirth.connect.client.ui.AbstractSettingsPanel;
-import com.mirth.connect.client.ui.components.MirthCheckBox;
-import com.mirth.connect.client.ui.components.MirthPasswordField;
-import com.mirth.connect.client.ui.components.MirthTextField;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Font;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -41,7 +37,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
-import javax.swing.JFrame;
+
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -104,24 +100,57 @@ import javax.xml.XMLConstants;
 //import java.io.InputStream;
 
 //import net.miginfocom.swing.MigLayout;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
 public class MainSettingsPanel extends AbstractSettingsPanel {
+    JTextField jtf;
+    JTextArea jta;
 
     public MainSettingsPanel() {
         // The name of our tab in the Settings menu
         super(MyConstants.SETTINGS_TABNAME_MAIN);
-        //addTask("doSearch", "Do Search", "Do Search.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png")));
-        addTask("doChannel", "Browse channel docs", "Browse channel docs.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png")));
         initComponents();
+        addTask("doSearch", "Do Search", "Do Search.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png")));
+
+        addTask("doChannel", "Browse channel docs", "Browse channel docs.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png")));
+
     }
 
     public void doSearch(){
-        System.out.println("DO SEARCH!");	
+
+        System.out.println("DO SEARCH PRESSED!");
+        SwingWorker<String,Void> worker = new SwingWorker<String, Void>() {
+            @Override
+            public String doInBackground() {
+                System.out.println("DO SEARCH DO IN BACKGROUND");
+                System.out.println("JTF getText: " + jtf.getText());
+                System.out.println("JTA getText: " + jta.getText());
+                StringBuilder sb = new StringBuilder();
+                try {
+                    for (Channel c : PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels()) {
+                        sb.append(Search.generate_search(c,jtf.getText()));
+                    }
+                } catch (Exception e){
+                    System.out.println(e.toString());
+                }
+                jta.setText(jtf.getText() + sb.toString());
+                System.out.println("JTF getText: " + jtf.getText());
+                System.out.println("JTA getText: " + jta.getText());
+                return ("hello");
+            }
+            @Override
+            public void done() {
+                System.out.println("DO SEARCH'S WORKER DONE.");
+            }
+
+        };
+        worker.execute();
     }
     
     public void doChannel(){
         System.out.println("DO CHANNEL PRESSED, using Summarize.useDocumentHelper");
-	System.out.println("DO CHANNEL PRESSED, STARTING WORKER");
+	    System.out.println("DO CHANNEL PRESSED, STARTING WORKER");
         SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
 		@Override
 		public String doInBackground() {
@@ -159,18 +188,6 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         setLayout(new BorderLayout());
 
 
-        //HTML Area for channel
-        JEditorPane text = new JEditorPane();
-        text.setContentType("text/html");
-        HTMLEditorKit kit = (HTMLEditorKit) text.getEditorKitForContentType("text/html");
-        StyleSheet styleSheet = kit.getStyleSheet();
-        styleSheet.addRule("body {color:#000; font-family:times; margin: 4px; }");
-        styleSheet.addRule("h1 {color: blue;}");
-        styleSheet.addRule("h2 {color: blue;}");
-        styleSheet.addRule("pre {font : 10px monaco; color : black; background-color : #fafafa; }");
-        kit.setStyleSheet(styleSheet);
-    	text.setText("<html><div>&lt;-- Click Do Channel to open browser.<br/>Use the nonexistent controls to search only channels with<br/>particular connector types, filters or transformers\nand to switch output between collapsible and full display.</div><div>TODO: Handle iteration by extracting children in rules and steps.</br>Add response transformer handling.</br>Add special handling for particular connector types to highlight relevant properties.<br/>For example, port, host, file, scheme, template </div></html");
-    	JScrollPane scroll = new JScrollPane(text);
         
         //List Area to choose channel
         JList list = new JList();
@@ -179,11 +196,8 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         //channelNameList = new String[200];
         int i = 0;
 	try {
-	    for (Channel channel: 								   PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels()){
+	    for (Channel channel: PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels()){
 		channelNameArrayList.add(channel.getName());
-		//channelNameList[i++] = channel.getName();
-		//channelNameList[0] = "alpha";
-		//channelNameList[1] = "beta";
 	    }
 	    String[] channelNameList = new String[channelNameArrayList.size()];
 	    list.setListData(channelNameArrayList.toArray());
@@ -194,7 +208,7 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         MouseListener mouseListener = new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-			text.setText("<html>Not implemented.</html>");
+		       System.out.println("List doubleclick not implemented.");
 		}
 	    }
         };
@@ -202,38 +216,32 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         
         JScrollPane listScroll = new JScrollPane(list);
         JLabel label = new JLabel("Hello World");
-        JButton button = new JButton("Channels to browser");
+	JPanel panel = new JPanel(new MigLayout());
+
+	panel.add(new JLabel("<html><h2>Search across all channels</h2></html>"), "wrap" );
+	//panel.add(new JCheckBox("HTML output?"),"wrap");
+	panel.add(new JLabel("Search string: " ),"wrap");
+	this.jtf = new JTextField("",30);
+	panel.add(jtf);
+
+        JButton button = new JButton("Search");
         button.addActionListener(new ActionListener() {
             @Override 
             public void actionPerformed(ActionEvent e) {
-                SwingWorker<String, Void> worker 
-                    = new SwingWorker<String, Void>() {
-
-                    @Override
-                    public String doInBackground() {
-                        String myString = "<html><h1>From swing worker</h1></html>";
-                        return myString;
-                    }
-                    @Override
-                    public void done() {
-                        try {
-                            text.setText(get());
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                        } catch (ExecutionException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                };
-                worker.execute();
+		doSearch();
             }
         });
-	JPanel panel = new JPanel(new MigLayout());
+        this.jtf.addActionListener(new ActionListener() {
+            @Override 
+            public void actionPerformed(ActionEvent e) {
+		doSearch();
+            }
+        });
 
-	panel.add(new JLabel("<html><h2>None of the controls are implemented,</h2> <h3>use Browse channel docs in menu at left: </h3></html>"), "wrap" );
-	panel.add(new JCheckBox("HTML output?"), "wrap");
-	panel.add(new JLabel("Search string: " ));
-	panel.add(new JTextField("empty"),"span");
+	panel.add(button, "wrap");
+	panel.add(new JLabel("Search results:"), "wrap");
+	this.jta = new JTextArea(10,128);
+	panel.add(jta, "span 2 12, grow");
         //Split pane to house list and
 	//control panel widgets.
 	//HTML display scrolled panes
@@ -243,26 +251,8 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
 			//        scroll);
 			panel);
 
-	
-        this.add(button,BorderLayout.PAGE_END);
-        this.add(split,BorderLayout.CENTER);
-	//this.pack();
+	this.add(split);
 	this.setVisible(true);
-	/*
-        //p.add(split,BorderLayout.CENTER);
-        //p.add(button,BorderLayout.SOUTH);
- 
-        //Display the window.
-        //this.pack();
-        //this.setVisible(true);
-
-        // this will print the HTML output
-        } catch (Exception e) {
-        	System.out.println(e.toString());
-        } finally {
-        	
-        };
-	*/
         
     }
     

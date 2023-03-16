@@ -167,8 +167,8 @@ public class Summarize {
 	channelStr.append( "<h3>" + channel.getName() + "</h3>\n");
 	channelStr.append( "<div>\n" );//creates inner div for accordion
 	channelStr.append( "<div class=\"accordion2\">\n" );
-        channelStr.append( "<h4>Description: " );
-        channelStr.append( String.valueOf(descriptionLength) );
+	channelStr.append( "<h4>Description: " );
+	channelStr.append( String.valueOf(descriptionLength) );
 	channelStr.append( " chars </h4>\n<div>\n<pre>" );
 	channelStr.append( escapeHTML(description) );
 	channelStr.append( "</pre>\n</div>\n" );
