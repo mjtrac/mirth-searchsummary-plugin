@@ -9,36 +9,16 @@ import com.mirth.connect.model.ChannelProperties;
 import com.mirth.connect.model.Channel;
 import com.mirth.connect.model.ChannelExportData;
 import com.mirth.connect.model.Connector;
-import com.mirth.connect.model.Filter;
-import com.mirth.connect.model.Rule;
-import com.mirth.connect.model.Step;
-import com.mirth.connect.model.FilterTransformerElement;
-import com.mirth.connect.model.Transformer;
 import com.mirth.connect.model.converters.ObjectXMLSerializer;
 import com.mirth.connect.donkey.model.channel.ConnectorProperties;
-import com.mirth.connect.plugins.*;
-//import com.mirth.connect.connectors.*;
-import com.mirth.connect.plugins.rulebuilder.RuleBuilderRule;
-//import com.mirth.connect.plugins.javascriptrule.JavaScriptRule;
-//import com.mirth.connect.plugins.mapper;
-//import com.mirth.connect.plugins.messagebuilder;
-//import com.mirth.connect.connectors.vm;
-
-import com.mitchtrachtenberg.mirthpluginsearchsummary.shared.MyConstants;
-import com.mirth.connect.donkey.model.*;
-import com.mirth.connect.model.Channel;
-
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.XMLConstants;
 import javax.xml.xpath.*;
 import javax.xml.xpath.XPathConstants;
