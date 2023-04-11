@@ -294,7 +294,6 @@ public class Summarize {
             channelStr.append(conn.getTransportName());
             channelStr.append( ")" );
             channelStr.append(h4e);
-            //TEST REMOVEchannelStr.append(dive); // conn contents division starts
 
             channelStr.append(htmlqq ? "<div class=\"accordion3\">\n" : "\n"); // acc3 starts
 
@@ -380,7 +379,6 @@ public class Summarize {
 
                 channelStr.append(dive); //ends accordion3 div
 
-                //TESTREMOVEchannelStr.append(dive); //ends inner div with conn contents
             } catch (Exception e) {
                 System.out.println("Problem with connector html gen");
                 System.out.println(e);
