@@ -16,6 +16,8 @@ A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin (4.2 only
 
 ## Usage
 
+IMPORTANT: Once this extension is installed, the Mirth Connect Administrator Launcher will need to be run with the -k flag that allows you to accept self-signed certificates, as the provided plugin certificate is self-signed.  You will then need to accept the prompt the launcher displays when it encounters the plugin.
+
 After the extension is installed into Mirth 4.2 (currently the only version checked is 4.2) 
 Mirth will have a new Search/summary tab in Settings view.  
 You may search for a complete property name (e.g.: port) or for a property value (e.g.: 6661).  All channels will be searched and you will be presented with a path to each reference (e.g.: channel(Channel with a Long Name)/sourceConnector/properties/listenerConnectorProperties/port/ = 6661).
