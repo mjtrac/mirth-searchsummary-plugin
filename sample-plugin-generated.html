@@ -1,0 +1,449 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script><link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css"><script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script><script>  $( function() {
+$( "#accordion" ).accordion({
+active: "false",
+heightStyle: "content",
+collapsible: "true"
+});
+} );
+</script>
+<script>
+$( function() {
+$( ".accordion2" ).accordion({
+heightStyle: "content",
+active: "false",
+collapsible: "true"
+});
+} );
+</script>
+<script>
+$( function() {
+$( ".accordion3" ).accordion({
+heightStyle: "content",
+active: "false",
+collapsible: "true"
+});
+} );
+</script>
+</head>
+<body>
+<div id="accordion">
+<h3>
+Channel with a Long Name</h3>
+<div>
+<div class="accordion2">
+<h4>
+Description: 0 chars </h4>
+<div>
+<pre></pre>
+</div>
+<h4>
+PreprocessingScript: 72 chars </h4>
+<div>
+<pre>// Modify the message variable below to pre process data
+return message;</pre>
+</div>
+<h4>
+PostprocessingScript: 157 chars </h4>
+<div>
+<pre>// This script executes once after a message has been processed
+// Responses returned from here will be stored as &#34;Postprocessor&#34; in the response map
+return;</pre>
+</div>
+<h4>
+DeployScript: 148 chars </h4>
+<div>
+<pre>// This script executes once when the channel is deployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</pre>
+</div>
+<h4>
+UndeployScript: 150 chars </h4>
+<div>
+<pre>// This script executes once when the channel is undeployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</pre>
+</div>
+<h4>
+Channel properties</h4>
+<div>
+<pre>channelProperties/clearGlobalChannelMap/ = true
+channelProperties/messageStorageMode/ = DEVELOPMENT
+channelProperties/encryptData/ = false
+channelProperties/removeContentOnCompletion/ = false
+channelProperties/removeOnlyFilteredOnCompletion/ = false
+channelProperties/removeAttachmentsOnCompletion/ = false
+channelProperties/initialState/ = STARTED
+channelProperties/storeAttachments/ = true
+channelProperties/metaDataColumns/metaDataColumn/name/ = SOURCE
+channelProperties/metaDataColumns/metaDataColumn/type/ = STRING
+channelProperties/metaDataColumns/metaDataColumn/mappingName/ = mirth_source
+channelProperties/metaDataColumns/metaDataColumn/name/ = TYPE
+channelProperties/metaDataColumns/metaDataColumn/type/ = STRING
+channelProperties/metaDataColumns/metaDataColumn/mappingName/ = mirth_type
+channelProperties/attachmentProperties/type/ = None
+channelProperties/attachmentProperties/properties/ = 
+channelProperties/resourceIds/entry/string/ = Default Resource
+channelProperties/resourceIds/entry/string/ = [Default Resource]
+</pre>
+</div>
+<h4>
+Channel export data</h4>
+<div>
+<pre>com.mirth.connect.model.ChannelExportData/metadata/enabled/ = true
+com.mirth.connect.model.ChannelExportData/metadata/lastModified/time/ = 1679086550165
+com.mirth.connect.model.ChannelExportData/metadata/lastModified/timezone/ = America/Los_Angeles
+com.mirth.connect.model.ChannelExportData/metadata/pruningSettings/archiveEnabled/ = true
+com.mirth.connect.model.ChannelExportData/metadata/pruningSettings/pruneErroredMessages/ = false
+com.mirth.connect.model.ChannelExportData/metadata/userId/ = 1
+com.mirth.connect.model.ChannelExportData/dependentIds/ = 
+com.mirth.connect.model.ChannelExportData/dependencyIds/ = 
+com.mirth.connect.model.ChannelExportData/channelTags/ = 
+</pre>
+</div>
+<h4>
+*CONNECTOR* sourceConnector (TCP Listener)</h4>
+<div class="accordion3">
+<h4>
+Connector properties</h4>
+<div>
+<pre>...tcp.TcpReceiverProperties/pluginProperties/ = 
+...tcp.TcpReceiverProperties/listenerConnectorProperties/host/ = 0.0.0.0
+...tcp.TcpReceiverProperties/listenerConnectorProperties/port/ = 6661
+...tcp.TcpReceiverProperties/sourceConnectorProperties/responseVariable/ = Auto-generate (After source transformer)
+...tcp.TcpReceiverProperties/sourceConnectorProperties/respondAfterProcessing/ = true
+...tcp.TcpReceiverProperties/sourceConnectorProperties/processBatch/ = false
+...tcp.TcpReceiverProperties/sourceConnectorProperties/firstResponse/ = true
+...tcp.TcpReceiverProperties/sourceConnectorProperties/processingThreads/ = 1
+...tcp.TcpReceiverProperties/sourceConnectorProperties/resourceIds/entry/string/ = Default Resource
+...tcp.TcpReceiverProperties/sourceConnectorProperties/resourceIds/entry/string/ = [Default Resource]
+...tcp.TcpReceiverProperties/sourceConnectorProperties/queueBufferSize/ = 1000
+...tcp.TcpReceiverProperties/transmissionModeProperties/pluginPointName/ = MLLP
+...tcp.TcpReceiverProperties/transmissionModeProperties/startOfMessageBytes/ = 0B
+...tcp.TcpReceiverProperties/transmissionModeProperties/endOfMessageBytes/ = 1C0D
+...tcp.TcpReceiverProperties/transmissionModeProperties/useMLLPv2/ = false
+...tcp.TcpReceiverProperties/transmissionModeProperties/ackBytes/ = 06
+...tcp.TcpReceiverProperties/transmissionModeProperties/nackBytes/ = 15
+...tcp.TcpReceiverProperties/transmissionModeProperties/maxRetries/ = 2
+...tcp.TcpReceiverProperties/serverMode/ = true
+...tcp.TcpReceiverProperties/remoteAddress/ = 
+...tcp.TcpReceiverProperties/remotePort/ = 
+...tcp.TcpReceiverProperties/overrideLocalBinding/ = false
+...tcp.TcpReceiverProperties/reconnectInterval/ = 5000
+...tcp.TcpReceiverProperties/receiveTimeout/ = 0
+...tcp.TcpReceiverProperties/bufferSize/ = 65536
+...tcp.TcpReceiverProperties/maxConnections/ = 10
+...tcp.TcpReceiverProperties/keepConnectionOpen/ = true
+...tcp.TcpReceiverProperties/dataTypeBinary/ = false
+...tcp.TcpReceiverProperties/charsetEncoding/ = DEFAULT_ENCODING
+...tcp.TcpReceiverProperties/respondOnNewConnection/ = 0
+...tcp.TcpReceiverProperties/responseAddress/ = 
+...tcp.TcpReceiverProperties/responsePort/ = 
+</pre>
+</div>
+<h4>
+Connector filter elements (3)</h4>
+<div>
+<ul><li>  0  Filter rule: The value of msg MSH.9.1 EQUALS 
+          'ADT'
+        .</li>
+<li>AND 1  Filter rule: The value of msg MSH.3.1 EXISTS .</li>
+<li>OR 2  Filter rule: The value of msg AL1.3.2.toUpperCase() EQUALS 
+          'PENICILLIN'
+        .</li>
+</ul>
+</div>
+<h4>
+Connector transformer elements (2)</h4>
+<div>
+<ul><li>0  Loop: For each msg['AL1']<ul><li>0-0  Mapper: Put the value of msg AL1.3.1 ("" if empty) in channel map with key al10_al13_al131.</li>
+</ul>
+</li></ul>
+</div>
+<h4>
+Connector response transformer elements (0)</h4>
+<div>
+<ul></ul>
+</div>
+</div>
+<h4>
+*CONNECTOR* Destination 1 (File Writer)</h4>
+<div class="accordion3">
+<h4>
+Connector properties</h4>
+<div>
+<pre>...file.FileDispatcherProperties/pluginProperties/ = 
+...file.FileDispatcherProperties/destinationConnectorProperties/queueEnabled/ = false
+...file.FileDispatcherProperties/destinationConnectorProperties/sendFirst/ = false
+...file.FileDispatcherProperties/destinationConnectorProperties/retryIntervalMillis/ = 10000
+...file.FileDispatcherProperties/destinationConnectorProperties/regenerateTemplate/ = false
+...file.FileDispatcherProperties/destinationConnectorProperties/retryCount/ = 0
+...file.FileDispatcherProperties/destinationConnectorProperties/rotate/ = false
+...file.FileDispatcherProperties/destinationConnectorProperties/includeFilterTransformer/ = false
+...file.FileDispatcherProperties/destinationConnectorProperties/threadCount/ = 1
+...file.FileDispatcherProperties/destinationConnectorProperties/threadAssignmentVariable/ = 
+...file.FileDispatcherProperties/destinationConnectorProperties/validateResponse/ = false
+...file.FileDispatcherProperties/destinationConnectorProperties/resourceIds/entry/string/ = Default Resource
+...file.FileDispatcherProperties/destinationConnectorProperties/resourceIds/entry/string/ = [Default Resource]
+...file.FileDispatcherProperties/destinationConnectorProperties/queueBufferSize/ = 1000
+...file.FileDispatcherProperties/destinationConnectorProperties/reattachAttachments/ = true
+...file.FileDispatcherProperties/scheme/ = FILE
+...file.FileDispatcherProperties/host/ = /Users/mjtrac
+...file.FileDispatcherProperties/outputPattern/ = ${message.messageId}.hl7
+...file.FileDispatcherProperties/anonymous/ = true
+...file.FileDispatcherProperties/username/ = anonymous
+...file.FileDispatcherProperties/password/ = anonymous
+...file.FileDispatcherProperties/timeout/ = 10000
+...file.FileDispatcherProperties/keepConnectionOpen/ = true
+...file.FileDispatcherProperties/maxIdleTime/ = 0
+...file.FileDispatcherProperties/secure/ = true
+...file.FileDispatcherProperties/passive/ = true
+...file.FileDispatcherProperties/validateConnection/ = true
+...file.FileDispatcherProperties/outputAppend/ = true
+...file.FileDispatcherProperties/errorOnExists/ = false
+...file.FileDispatcherProperties/temporary/ = false
+...file.FileDispatcherProperties/binary/ = false
+...file.FileDispatcherProperties/charsetEncoding/ = DEFAULT_ENCODING
+...file.FileDispatcherProperties/template/ = ${message.encodedData}
+</pre>
+</div>
+<h4>
+Connector filter elements (0)</h4>
+<div>
+<ul></ul>
+</div>
+<h4>
+Connector transformer elements (1)</h4>
+<div>
+<ul><li>0  Mapper: Put the value of msg DG1.4.2 ("" if empty) in channel map with key dg1_dg14_dg142.</li>
+</ul>
+</div>
+<h4>
+Connector response transformer elements (0)</h4>
+<div>
+<ul></ul>
+</div>
+</div>
+</div>
+</div>
+<h3>
+test</h3>
+<div>
+<div class="accordion2">
+<h4>
+Description: 0 chars </h4>
+<div>
+<pre></pre>
+</div>
+<h4>
+PreprocessingScript: 72 chars </h4>
+<div>
+<pre>// Modify the message variable below to pre process data
+return message;</pre>
+</div>
+<h4>
+PostprocessingScript: 157 chars </h4>
+<div>
+<pre>// This script executes once after a message has been processed
+// Responses returned from here will be stored as &#34;Postprocessor&#34; in the response map
+return;</pre>
+</div>
+<h4>
+DeployScript: 148 chars </h4>
+<div>
+<pre>// This script executes once when the channel is deployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</pre>
+</div>
+<h4>
+UndeployScript: 150 chars </h4>
+<div>
+<pre>// This script executes once when the channel is undeployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</pre>
+</div>
+<h4>
+Channel properties</h4>
+<div>
+<pre>channelProperties/clearGlobalChannelMap/ = true
+channelProperties/messageStorageMode/ = DEVELOPMENT
+channelProperties/encryptData/ = false
+channelProperties/removeContentOnCompletion/ = false
+channelProperties/removeOnlyFilteredOnCompletion/ = false
+channelProperties/removeAttachmentsOnCompletion/ = false
+channelProperties/initialState/ = STARTED
+channelProperties/storeAttachments/ = true
+channelProperties/metaDataColumns/metaDataColumn/name/ = SOURCE
+channelProperties/metaDataColumns/metaDataColumn/type/ = STRING
+channelProperties/metaDataColumns/metaDataColumn/mappingName/ = mirth_source
+channelProperties/metaDataColumns/metaDataColumn/name/ = TYPE
+channelProperties/metaDataColumns/metaDataColumn/type/ = STRING
+channelProperties/metaDataColumns/metaDataColumn/mappingName/ = mirth_type
+channelProperties/attachmentProperties/type/ = None
+channelProperties/attachmentProperties/properties/ = 
+channelProperties/resourceIds/entry/string/ = Default Resource
+channelProperties/resourceIds/entry/string/ = [Default Resource]
+</pre>
+</div>
+<h4>
+Channel export data</h4>
+<div>
+<pre>com.mirth.connect.model.ChannelExportData/metadata/enabled/ = true
+com.mirth.connect.model.ChannelExportData/metadata/lastModified/time/ = 1678987393093
+com.mirth.connect.model.ChannelExportData/metadata/lastModified/timezone/ = America/Los_Angeles
+com.mirth.connect.model.ChannelExportData/metadata/pruningSettings/archiveEnabled/ = true
+com.mirth.connect.model.ChannelExportData/metadata/pruningSettings/pruneErroredMessages/ = false
+com.mirth.connect.model.ChannelExportData/metadata/userId/ = 1
+com.mirth.connect.model.ChannelExportData/dependentIds/ = 
+com.mirth.connect.model.ChannelExportData/dependencyIds/ = 
+com.mirth.connect.model.ChannelExportData/channelTags/ = 
+</pre>
+</div>
+<h4>
+*CONNECTOR* sourceConnector (Channel Reader)</h4>
+<div class="accordion3">
+<h4>
+Connector properties</h4>
+<div>
+<pre>...vm.VmReceiverProperties/pluginProperties/ = 
+...vm.VmReceiverProperties/sourceConnectorProperties/responseVariable/ = None
+...vm.VmReceiverProperties/sourceConnectorProperties/respondAfterProcessing/ = true
+...vm.VmReceiverProperties/sourceConnectorProperties/processBatch/ = false
+...vm.VmReceiverProperties/sourceConnectorProperties/firstResponse/ = false
+...vm.VmReceiverProperties/sourceConnectorProperties/processingThreads/ = 1
+...vm.VmReceiverProperties/sourceConnectorProperties/resourceIds/entry/string/ = Default Resource
+...vm.VmReceiverProperties/sourceConnectorProperties/resourceIds/entry/string/ = [Default Resource]
+...vm.VmReceiverProperties/sourceConnectorProperties/queueBufferSize/ = 1000
+</pre>
+</div>
+<h4>
+Connector filter elements (1)</h4>
+<div>
+<ul><li>  0  Filter rule: The value of msg PID.5.1 EQUALS 
+          'A'
+        .</li>
+</ul>
+</div>
+<h4>
+Connector transformer elements (0)</h4>
+<div>
+<ul></ul>
+</div>
+<h4>
+Connector response transformer elements (0)</h4>
+<div>
+<ul></ul>
+</div>
+</div>
+<h4>
+*CONNECTOR* Destination 1 (Channel Writer)</h4>
+<div class="accordion3">
+<h4>
+Connector properties</h4>
+<div>
+<pre>...vm.VmDispatcherProperties/pluginProperties/ = 
+...vm.VmDispatcherProperties/destinationConnectorProperties/queueEnabled/ = false
+...vm.VmDispatcherProperties/destinationConnectorProperties/sendFirst/ = false
+...vm.VmDispatcherProperties/destinationConnectorProperties/retryIntervalMillis/ = 10000
+...vm.VmDispatcherProperties/destinationConnectorProperties/regenerateTemplate/ = false
+...vm.VmDispatcherProperties/destinationConnectorProperties/retryCount/ = 0
+...vm.VmDispatcherProperties/destinationConnectorProperties/rotate/ = false
+...vm.VmDispatcherProperties/destinationConnectorProperties/includeFilterTransformer/ = false
+...vm.VmDispatcherProperties/destinationConnectorProperties/threadCount/ = 1
+...vm.VmDispatcherProperties/destinationConnectorProperties/threadAssignmentVariable/ = 
+...vm.VmDispatcherProperties/destinationConnectorProperties/validateResponse/ = false
+...vm.VmDispatcherProperties/destinationConnectorProperties/resourceIds/entry/string/ = Default Resource
+...vm.VmDispatcherProperties/destinationConnectorProperties/resourceIds/entry/string/ = [Default Resource]
+...vm.VmDispatcherProperties/destinationConnectorProperties/queueBufferSize/ = 1000
+...vm.VmDispatcherProperties/destinationConnectorProperties/reattachAttachments/ = true
+...vm.VmDispatcherProperties/channelId/ = none
+...vm.VmDispatcherProperties/channelTemplate/ = ${message.encodedData}
+...vm.VmDispatcherProperties/mapVariables/ = 
+</pre>
+</div>
+<h4>
+Connector filter elements (0)</h4>
+<div>
+<ul></ul>
+</div>
+<h4>
+Connector transformer elements (0)</h4>
+<div>
+<ul></ul>
+</div>
+<h4>
+Connector response transformer elements (0)</h4>
+<div>
+<ul></ul>
+</div>
+</div>
+<h4>
+*CONNECTOR* Send to 6667 (TCP Sender)</h4>
+<div class="accordion3">
+<h4>
+Connector properties</h4>
+<div>
+<pre>...tcp.TcpDispatcherProperties/pluginProperties/ = 
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/queueEnabled/ = false
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/sendFirst/ = false
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/retryIntervalMillis/ = 10000
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/regenerateTemplate/ = false
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/retryCount/ = 0
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/rotate/ = false
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/includeFilterTransformer/ = false
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/threadCount/ = 1
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/threadAssignmentVariable/ = 
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/validateResponse/ = true
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/resourceIds/entry/string/ = Default Resource
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/resourceIds/entry/string/ = [Default Resource]
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/queueBufferSize/ = 1000
+...tcp.TcpDispatcherProperties/destinationConnectorProperties/reattachAttachments/ = true
+...tcp.TcpDispatcherProperties/transmissionModeProperties/pluginPointName/ = MLLP
+...tcp.TcpDispatcherProperties/transmissionModeProperties/startOfMessageBytes/ = 0B
+...tcp.TcpDispatcherProperties/transmissionModeProperties/endOfMessageBytes/ = 1C0D
+...tcp.TcpDispatcherProperties/transmissionModeProperties/useMLLPv2/ = false
+...tcp.TcpDispatcherProperties/transmissionModeProperties/ackBytes/ = 06
+...tcp.TcpDispatcherProperties/transmissionModeProperties/nackBytes/ = 15
+...tcp.TcpDispatcherProperties/transmissionModeProperties/maxRetries/ = 2
+...tcp.TcpDispatcherProperties/serverMode/ = false
+...tcp.TcpDispatcherProperties/remoteAddress/ = 127.0.0.1
+...tcp.TcpDispatcherProperties/remotePort/ = 6667
+...tcp.TcpDispatcherProperties/overrideLocalBinding/ = false
+...tcp.TcpDispatcherProperties/localAddress/ = 0.0.0.0
+...tcp.TcpDispatcherProperties/localPort/ = 0
+...tcp.TcpDispatcherProperties/sendTimeout/ = 5000
+...tcp.TcpDispatcherProperties/bufferSize/ = 65536
+...tcp.TcpDispatcherProperties/maxConnections/ = 10
+...tcp.TcpDispatcherProperties/keepConnectionOpen/ = false
+...tcp.TcpDispatcherProperties/checkRemoteHost/ = false
+...tcp.TcpDispatcherProperties/responseTimeout/ = 5000
+...tcp.TcpDispatcherProperties/ignoreResponse/ = false
+...tcp.TcpDispatcherProperties/queueOnResponseTimeout/ = true
+...tcp.TcpDispatcherProperties/dataTypeBinary/ = false
+...tcp.TcpDispatcherProperties/charsetEncoding/ = DEFAULT_ENCODING
+...tcp.TcpDispatcherProperties/template/ = ${message.encodedData}
+</pre>
+</div>
+<h4>
+Connector filter elements (0)</h4>
+<div>
+<ul></ul>
+</div>
+<h4>
+Connector transformer elements (0)</h4>
+<div>
+<ul></ul>
+</div>
+<h4>
+Connector response transformer elements (1)</h4>
+<div>
+<ul><li>0  Mapper: Put the value of msg MSA.1.1 ("" if empty) in channel map with key msa_msa1_msa11.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
