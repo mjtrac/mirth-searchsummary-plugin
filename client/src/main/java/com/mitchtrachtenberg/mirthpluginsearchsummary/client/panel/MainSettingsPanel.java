@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Kaur Palang
+ * Copyright 2023 Mitch Trachtenberg
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,7 +60,18 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         // The name of our tab in the Settings menu
         super(MyConstants.SETTINGS_TABNAME_MAIN);
         initComponents();
-        addTask("doChannel", "Browse channel docs", "Browse channel docs.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png")));
+        addTask("genSummaryHTML",
+                "Browse channels html",
+                "Browse channels html.",
+                "",
+                new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png"))
+        );
+        addTask("genSummaryBasic",
+                "Browse channels text",
+                "Browse channels text.",
+                "",
+                new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/table.png"))
+        );
     }
 
     public void doSearch(){
@@ -93,32 +104,58 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         };
         worker.execute();
     }
-    
-    public void doChannel(){
+
+    public void genSummaryHTML(){
         SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
-		@Override
-		public String doInBackground() {
-		    try {
-			String channelStr = Summarize.generate_all(
-			    PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels());
-			Path tempFile = Files.createTempFile(null, ".html");
-			Desktop desk = Desktop.getDesktop();
-			Files.write(tempFile,
-				    channelStr.getBytes(
-							StandardCharsets.UTF_8
-							)
-				    );
-			desk.browse(tempFile.toUri());
-		    } catch (Exception e){
-			System.out.println(e);
-		    }
-		    return "Done";
-		}
-		@Override
-		public void done() {
-		}
-	    };
-	worker.execute();
+            @Override
+            public String doInBackground() {
+                try {
+                    String channelStr = Summarize.generate(true,
+                            PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels());
+                    Path tempFile = Files.createTempFile(null, ".html");
+                    Desktop desk = Desktop.getDesktop();
+                    Files.write(tempFile,
+                            channelStr.getBytes(
+                                    StandardCharsets.UTF_8
+                            )
+                    );
+                    desk.browse(tempFile.toUri());
+                } catch (Exception e){
+                    System.out.println(e);
+                }
+                return "Done";
+            }
+            @Override
+            public void done() {
+            }
+        };
+        worker.execute();
+    }
+    public void genSummaryBasic(){
+        SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
+            @Override
+            public String doInBackground() {
+                try {
+                    String channelStr = Summarize.generate(false,
+                            PlatformUI.MIRTH_FRAME.mirthClient.getAllChannels());
+                    Path tempFile = Files.createTempFile(null, ".txt");
+                    Desktop desk = Desktop.getDesktop();
+                    Files.write(tempFile,
+                            channelStr.getBytes(
+                                    StandardCharsets.UTF_8
+                            )
+                    );
+                    desk.browse(tempFile.toUri());
+                } catch (Exception e){
+                    System.out.println(e);
+                }
+                return "Done";
+            }
+            @Override
+            public void done() {
+            }
+        };
+        worker.execute();
     }
 
     // if channel list used in future
@@ -188,7 +225,8 @@ public class MainSettingsPanel extends AbstractSettingsPanel {
         panel.add(search_label, "wrap");
 
         panel.add(jtf, "split 2");
-        panel.add(search_button, "wrap");
+
+	panel.add(search_button, "wrap");
 
         panel.add(search_results_label, "wrap");
 

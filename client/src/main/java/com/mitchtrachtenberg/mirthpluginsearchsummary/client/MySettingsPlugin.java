@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Kaur Palang
+ * Copyright 2023 Mitch Trachtenberg
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class MySettingsPlugin extends SettingsPanelPlugin {
 
     @Override
     public void start() {
-        System.out.println("MySettingsPlugin calling overriden method start()");
+        //System.out.println("MySettingsPlugin calling overriden method start()");
         this.mainSettingsPanel = new MainSettingsPanel();
     }
 
