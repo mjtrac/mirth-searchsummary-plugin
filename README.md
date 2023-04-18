@@ -35,12 +35,15 @@ The html is generated to allow quick navigation.
 - Any external libraries that you might want to use in the plugin at runtime, go into `libs/runtime/{type}`
 - Any external libraries that you might want to use at compiletime, go into `libs/compiletime/{type}`
 
----
+
 ## TODO
 * Allow file selector saving of generated text and html.
 * Add data type properties for filters and transformers.
 * Investigate adding capability to channel view rather than settings.
+* Enable retrieval via Mirth Connect API
 
-Note: Although I am an instructor for NextGen, this work is completely independent of my job and any errors are my own.  Also, the Mirth Connect build system, Mirth Connect's dependencies, Java versioning, and Java build systems are all mysteries to me, so I've just tried to follow Kaur Palang's structure and guide, for which I am grateful.  
+
+## NOTE 
+Although I am an instructor for NextGen, this work is completely independent of my job and any errors are my own.  Also, the Mirth Connect build system, Mirth Connect's dependencies, Java versioning, and Java build systems are all mysteries to me, so I've just tried to follow Kaur Palang's structure and guide, for which I am grateful.  
 
 Mitch Trachtenberg, mjtrac at gmail dot com.
