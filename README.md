@@ -8,6 +8,7 @@ A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin (4.2 only
 1. [Install Java](https://www.javatpoint.com/javafx-how-to-install-java)
 1. [Install Maven](https://www.javatpoint.com/how-to-install-maven)
 1. Run `git clone https://github.com/mjtrac/mirth-searchsummary-plugin`
+1. Copy  m2settings.xml to use as your local maven settings.xml, located in .m2 under your home directory, or include the <servers> material from m2settings.xml in your existing ~/.m2/settings.xml. (This is required to get permissions needed for Kaur's mirth-resources-api repo at github.)
 1. Navigate to `mirth-searchsummary-plugin/`
 1. Run `mvn install` to install dependencies to local cache
 1. Run `mvn clean package` to verify the build works
