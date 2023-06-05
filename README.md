@@ -16,6 +16,7 @@ A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin (4.2 only
 ---
 
 ## Usage
+IMPORTANT: You MUST add server information to your Maven settings.xml file in your ~/.m2 folder in order to use Kaur's repository of various Mirth jars in building this plugin.
 
 IMPORTANT: Once this extension is installed, the Mirth Connect Administrator Launcher will need to be run with the -k flag that allows you to accept self-signed certificates, as the provided plugin certificate is self-signed.  You will then need to accept the prompt the launcher displays when it encounters the plugin.
 
