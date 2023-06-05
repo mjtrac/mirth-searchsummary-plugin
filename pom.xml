@@ -68,10 +68,11 @@
     </properties>
 
     <repositories>
+        <!-- SEE README FOR REQUIRED USERNAME AND PASSWORD FOR THIS REPOSITORY -->
         <repository>
-            <id>nexus</id>
-            <url>https://maven.kaurpalang.com/repository/maven-public/</url>
-        </repository>
+	    <id>github</id>
+	    <url>https://maven.pkg.github.com/kpalang/mirth-resources-api/</url>
+	</repository>
     </repositories>
 
     <dependencies>
