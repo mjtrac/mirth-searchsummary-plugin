@@ -10,7 +10,7 @@ A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin (4.2 only
 1. Run `git clone https://github.com/mjtrac/mirth-searchsummary-plugin`
 1. Copy  m2settings.xml to use as your local maven settings.xml, located in .m2 under your home directory, or include the <servers> material from m2settings.xml in your existing ~/.m2/settings.xml. (This is required to get permissions needed for Kaur's mirth-resources-api repo at github.)
 1. Navigate to `mirth-searchsummary-plugin/`
-1. Run `mvn install` to install dependencies to local cache (see below for Unauthorized from github repo)
+1. Run `mvn install` to install dependencies to local cache (see below if you get an error message indicating you are Unauthorized to download from the github repo)
 1. Run `mvn clean package` to verify the build works
 1. Install the sample plugin by getting the `.zip` archive from `mirth-searchsummary-plugin/distribution/target`
 ---
@@ -40,13 +40,23 @@ The html is generated to allow quick navigation.
 
 ## IF YOU GET UNAUTHORIZED WHEN YOU TRY TO USE THE KPALANG GITHUB REPO
 If you want to build this for your current version of Mirth, then you can manually install the current Mirth jar files into your local Maven 
-repository with a command modeled on this one, for each file that Maven cannot download.  In this case, the jar file is located in the 
-Mirth Connect install tree's server-lib folder, but other required jar files may be located in other subfolders.  
+repository with a command modeled on this one, one for each jar file that Maven cannot download from the kpalang repo.  
+In this example command, the jar file is located in the Mirth Connect install tree's server-lib folder, but other required jar files may be located in other subfolders.  
 
-Replace 4.3.0 wbelow ith the version number of Mirth you've installed, and replace the file, groupId, and artifactId as necessary. 
+Replace 4.3.0 below with the version number of Mirth you've installed, and replace the file, groupId, and artifactId as necessary. 
 
-```mvn install:install-file -Dfile=<path to your local Mirth install>/server-lib/mirth-server.jar -DgroupId=com.mirth.connect -DartifactId=mirth-server -Dversion=4.3.0 -Dpackaging=jar```
+```
+mvn install:install-file \
+  -Dfile=<path to your local Mirth install>/server-lib/mirth-server.jar \
+  -DgroupId=com.mirth.connect \
+  -DartifactId=mirth-server \
+  -Dversion=4.3.0 -Dpackaging=jar
+```
 
+The command should give a response that includes something like:
+```
+[INFO] Installing <path to your Mirth install>/server-lib/mirth-server.jar to <your home dir>/.m2/repository/com/mirth/connect/mirth-server/4.3.0/mirth-server-4.3.0.jar
+```
 
 ## TODO
 * Allow file selector saving of generated text and html.
