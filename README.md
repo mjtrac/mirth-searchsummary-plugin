@@ -10,7 +10,7 @@ A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin (4.2 only
 1. Run `git clone https://github.com/mjtrac/mirth-searchsummary-plugin`
 1. Copy  m2settings.xml to use as your local maven settings.xml, located in .m2 under your home directory, or include the <servers> material from m2settings.xml in your existing ~/.m2/settings.xml. (This is required to get permissions needed for Kaur's mirth-resources-api repo at github.)
 1. Navigate to `mirth-searchsummary-plugin/`
-1. Run `mvn install` to install dependencies to local cache
+1. Run `mvn install` to install dependencies to local cache (see below for Unauthorized from github repo)
 1. Run `mvn clean package` to verify the build works
 1. Install the sample plugin by getting the `.zip` archive from `mirth-searchsummary-plugin/distribution/target`
 ---
@@ -36,6 +36,16 @@ The html is generated to allow quick navigation.
 
 - Any external libraries that you might want to use in the plugin at runtime, go into `libs/runtime/{type}`
 - Any external libraries that you might want to use at compiletime, go into `libs/compiletime/{type}`
+
+
+## IF YOU GET UNAUTHORIZED WHEN YOU TRY TO USE THE KPALANG GITHUB REPO
+If you want to build this for your current version of Mirth, then you can manually install the current Mirth jar files into your local Maven 
+repository with a command modeled on this one, for each file that Maven cannot download.  In this case, the jar file is located in the 
+Mirth Connect install tree's server-lib folder, but other required jar files may be located in other subfolders.  
+
+Replace 4.3.0 wbelow ith the version number of Mirth you've installed, and replace the file, groupId, and artifactId as necessary. 
+
+```mvn install:install-file -Dfile=<path to your local Mirth install>/server-lib/mirth-server.jar -DgroupId=com.mirth.connect -DartifactId=mirth-server -Dversion=4.3.0 -Dpackaging=jar```
 
 
 ## TODO
