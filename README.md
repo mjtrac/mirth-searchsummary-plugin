@@ -16,10 +16,12 @@ A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin started f
 ---
 
 ## Installation of pre-built zip for Mirth Connect 4.3
-1. `git clone https://github.com/mjtrac/mirth-searchsummary-plugin` 
+1. `git clone https://github.com/mjtrac/mirth-searchsummary-plugin`
+1. This will create a directory under your current directory, named mirth-searchsummary-plugin
 1. Run Mirth Connect 4.3.0 (this zip will only work with 4.3.0)
-1. Go to the Extensions page in Mirth Connect 4.3.0
-1. At the bottom of the extensions page, Browse to the prebuilt-for-4.3.0 searchsummaryplugin.zip in the distribution folder  of your cloned mirth-searchsummary-plugin tree
+1. In the Mirth Connect Administrator for 4.3.0, in the upper left corner, select Extensions from the main menu
+1. At the bottom of the Extensions page, beneath "Install Extension from File System," browse to the file searchsummaryplugin.zip in the distribution folder of your cloned mirth-searchsummary-plugin tree. This was built for Mirth Connect 4.3.0
+1. Click Install at the right.  You should be prompted to restart the server and administrator.
 1. Restart the Mirth Connect Server and run the Administrator Launcher with the "-k" argument which will allow you to accept a self-signed certificate on the extension.
 1. If you run into trouble, you can go to your Mirth Connect appdata folder and, in extension.properties, change the line Search\ Summary\ Plugin=true to Search\ Summary\ Plugin= false and restart server and client.
 ## Usage
