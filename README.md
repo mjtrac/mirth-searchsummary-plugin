@@ -15,7 +15,7 @@ A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin started f
 1. Install the sample plugin by getting the `.zip` archive from `mirth-searchsummary-plugin/distribution/target`
 ---
 
-## Installation of pre-built zip for Mirth Connect 4.3
+## Installation of pre-built zip for Mirth Connect 4.3.0
 1. `git clone https://github.com/mjtrac/mirth-searchsummary-plugin`
 1. This will create a directory under your current directory, named mirth-searchsummary-plugin
 1. Run Mirth Connect 4.3.0 (this zip will only work with 4.3.0)
@@ -29,7 +29,7 @@ IMPORTANT: You MUST add server information to your Maven settings.xml file in yo
 
 IMPORTANT: Once this extension is installed, the Mirth Connect Administrator Launcher will need to be run with the -k flag that allows you to accept self-signed certificates, as the provided plugin certificate is self-signed.  You will then need to accept the prompt the launcher displays when it encounters the plugin.
 
-After the extension is installed into Mirth 4.2 (currently the only version checked is 4.2) 
+After the extension is installed into Mirth 4.3.0 (currently the only version checked is 4.3.0) 
 Mirth will have a new Search/summary tab in Settings view.  
 You may search for a complete property name (e.g.: port) or for a property value (e.g.: 6661).  All channels will be searched and you will be presented with a path to each reference (e.g.: channel(Channel with a Long Name)/sourceConnector/properties/listenerConnectorProperties/port/ = 6661).
 
@@ -49,7 +49,8 @@ The html is generated to allow quick navigation.
 
 ## IF YOU GET UNAUTHORIZED WHEN YOU TRY TO USE THE KPALANG GITHUB REPO
 If you want to build this for your current version of Mirth, then you can manually install the current Mirth jar files into your local Maven 
-repository with a command modeled on this one, one for each jar file that Maven cannot download from the kpalang repo.  
+repository with a series of commands modeled on this one, one for each jar file that Maven cannot download from the kpalang repo and therefore reports as an error.  
+
 In this example command, the jar file is located in the Mirth Connect install tree's server-lib folder, but other required jar files may be located in other subfolders.  
 
 Replace 4.3.0 below with the version number of Mirth you've installed, and replace the file, groupId, and artifactId as necessary. 
@@ -59,12 +60,24 @@ mvn install:install-file \
   -Dfile=<path to your local Mirth install>/server-lib/mirth-server.jar \
   -DgroupId=com.mirth.connect \
   -DartifactId=mirth-server \
-  -Dversion=4.3.0 -Dpackaging=jar
+  -Dversion=4.3.0
+  -Dpackaging=jar
 ```
 
 The command should give a response that includes something like:
 ```
 [INFO] Installing <path to your Mirth install>/server-lib/mirth-server.jar to <your home dir>/.m2/repository/com/mirth/connect/mirth-server/4.3.0/mirth-server-4.3.0.jar
+```
+
+This adds the file to your standard "local repository" (typically ~/.m2/repository) so that maven will not need to download it from elsewhere.  You can add an additional argument -DlocalRepositoryPath=/your/path to install the files into their own separate repository, and then add a reference to that repository in the pom.xml file.  This link has helpful information: https://maven.apache.org/guides/mini/guide-multiple-repositories.html. To indicate you are just using a branch of the file system as a repo you can use the file: prefix in the repo's url line rather than the http: prefix:
+```
+<repositories>
+    <repository>
+      <id>example-repo</id>
+      <name>Example Repository</name>
+      <url>file://path/to/your/local/repository</url>
+    </repository>
+  </repositories>
 ```
 To add additional versions, you can repeat the process with other versions of Mirth Connect, which can be downloaded from https://mirthdownloadarchive.s3.amazonaws.com/connect-downloads.html
 
