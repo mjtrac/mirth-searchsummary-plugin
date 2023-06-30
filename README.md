@@ -1,10 +1,10 @@
 # A Mirth Connect plugin to add cross channel searching and present a summary view of channels via a Settings tab
 
-A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin (4.2 only for now) started from Kaur Palang's [sample plugin] (https://github.com/kpalang/mirth-sample-plugin).  Allows cross-channel searching and generates a jQuery-accordion style [nested summary] (https://github.com/mjtrac/mirth-sample-plugin/blob/master/sample-plugin-generated.html) of your channels.  Relevant non-boilerplate is in client/src/main/java/com/mitchtrachtenberg/mirthpluginsearchsummary/client
+A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin started from Kaur Palang's [sample plugin] (https://github.com/kpalang/mirth-sample-plugin).  Allows cross-channel searching and generates a jQuery-accordion style [nested summary] (https://github.com/mjtrac/mirth-sample-plugin/blob/master/sample-plugin-generated.html) of your channels.  Relevant non-boilerplate is in client/src/main/java/com/mitchtrachtenberg/mirthpluginsearchsummary/client
 
 ---
 
-## Installation
+## Installation by building
 1. [Install Java](https://www.javatpoint.com/javafx-how-to-install-java)
 1. [Install Maven](https://www.javatpoint.com/how-to-install-maven)
 1. Run `git clone https://github.com/mjtrac/mirth-searchsummary-plugin`
@@ -15,6 +15,13 @@ A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin (4.2 only
 1. Install the sample plugin by getting the `.zip` archive from `mirth-searchsummary-plugin/distribution/target`
 ---
 
+## Installation of pre-built zip for Mirth Connect 4.3
+1. `git clone https://github.com/mjtrac/mirth-searchsummary-plugin`
+1. `cd mirth-searchsummary-plugin/distribution/searchsummaryplugin.zip
+1. Run Mirth Connect 4.2.0 (this zip will only work with 4.2.0)
+1. Go to the Extensions page in Mirth Connect 4.2.0
+1. At the bottom of the extensions page, Browse to your downloaded copy of searchsummaryplugin.zip and then click Install
+1. Restart the Mirth Connect Server and run the Administrator Launcher with the "-k" argument which will allow you to accept a self-signed certificate on the extension. 
 ## Usage
 IMPORTANT: You MUST add server information to your Maven settings.xml file in your ~/.m2 folder in order to use Kaur's repository of various Mirth jars in building this plugin.
 
