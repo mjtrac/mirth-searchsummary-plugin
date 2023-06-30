@@ -57,6 +57,7 @@ The command should give a response that includes something like:
 ```
 [INFO] Installing <path to your Mirth install>/server-lib/mirth-server.jar to <your home dir>/.m2/repository/com/mirth/connect/mirth-server/4.3.0/mirth-server-4.3.0.jar
 ```
+To add additional versions, you can repeat the process with other versions of Mirth Connect, which can be downloaded from https://mirthdownloadarchive.s3.amazonaws.com/connect-downloads.html
 
 ## TODO
 * Allow file selector saving of generated text and html.
