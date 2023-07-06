@@ -81,8 +81,43 @@ The command should give a response that includes something like:
 ```
 [INFO] Installing <path to your Mirth install>/server-lib/mirth-server.jar to <your home dir>/.m2/repository/com/mirth/connect/mirth-server/4.3.0/mirth-server-4.3.0.jar
 ```
+If you want to build this for your current version of Mirth, first clone Kaur Palang's mirth-plugin-maven-plugin project, build it, and install it locally:
+```
+git clone http://github.com/kpalang/mirth-plugin-maven-plugin
+cd mirth-plugin-maven-plugin
+mvn clean
+mvn install
+```
+you should see lines like the following:
+```
+[INFO] Installing /Users/mjtrac/Documents/GitHub/mirth-plugin-maven-plugin/pom.xml to /Users/mjtrac/.m2/repository/com/kaurpalang/mirth-plugin-maven-plugin/1.0.2-SNAPSHOT/mirth-plugin-maven-plugin-1.0.2-SNAPSHOT.pom
+[INFO] Installing /Users/mjtrac/Documents/GitHub/mirth-plugin-maven-plugin/target/mirth-plugin-maven-plugin-1.0.2-SNAPSHOT.jar to /Users/mjtrac/.m2/repository/com/kaurpalang/mirth-plugin-maven-plugin/1.0.2-SNAPSHOT/mirth-plugin-maven-plugin-1.0.2-SNAPSHOT.jar
+```
+Then, you can manually install the current Mirth jar files into your local Maven 
+repository with a series of commands modeled on this one, one for each jar file that Maven cannot download from the kpalang repo and therefore reports as an error.  
 
-After running mvn install commands following the style above, my local repository has the following Mirth Connect 4.3.0 files installed (you may not need all of these):
+In this example command, the jar file is located in the Mirth Connect install tree's server-lib folder, but other required jar files may be located in other subfolders.  
+
+Replace 4.3.0 below with the version number of Mirth you've installed, and replace the file, groupId, and artifactId as necessary. (The command can be entered as a single line.)
+
+```
+mvn install:install-file \
+  -Dfile=<path to your local Mirth install>/server-lib/mirth-server.jar \
+  -DgroupId=com.mirth.connect \
+  -DartifactId=mirth-server \
+  -Dversion=4.3.0
+  -Dpackaging=jar
+```
+This adds the file to your standard "local repository" (typically ~/.m2/repository) so that maven will not need to download it from elsewhere. 
+
+The command should give a response that includes something like:
+```
+[INFO] Installing <path to your Mirth install>/server-lib/mirth-server.jar
+  to <your home dir>/.m2/repository/com/mirth/connect/mirth-server/4.3.0/mirth-server-4.3.0.jar
+```
+
+After running mvn install commands following the style above, my local repository has the following Mirth Connect 4.3.0 files installed 
+(you may not need all of these):
 ```
 /Users/mjtrac/.m2/repository/com/mirth/connect/...
 ...mirth-client-core/4.3.0/mirth-client-core-4.3.0.jar
@@ -98,6 +133,11 @@ After running mvn install commands following the style above, my local repositor
 ...plugins/messagebuilder-client/4.3.0/messagebuilder-client-4.3.0.jar
 ...plugins/rulebuilder-client/4.3.0/rulebuilder-client-4.3.0.jar
 ```
+
+The groupId is com.mirth.connect for the mirth- and donkey- files and 
+com.mirth.connect.plugins for plugins; 
+the artifactId to use is the jar name less the version and jar extension; 
+...donkey-model/4.3.0/donkey-model-4.3.0.jar --> artifactId donkey-model.
 
 To add additional versions, you can repeat the process with other versions of Mirth Connect, which can be downloaded from https://mirthdownloadarchive.s3.amazonaws.com/connect-downloads.html
 
