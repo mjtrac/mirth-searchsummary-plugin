@@ -67,12 +67,18 @@
         <plugin.archive.name>searchsummaryplugin</plugin.archive.name>
     </properties>
 
+    <!--
+	This bit specifies a Maven repository Kaur Palang
+	is hosting for Mirth jarfiles so we don't have
+	to manually extract them from Mirth itself.
+    -->
     <repositories>
         <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/kpalang/mirth-resources-api/</url>
+            <id>repsy</id>
+            <url>https://repo.repsy.io/mvn/kpalang/mirthconnect/</url>
         </repository>
     </repositories>
+
 
     <dependencies>
         <!-- Helper plugin to handle Mirth plugin specific tasks. -->
@@ -80,7 +86,7 @@
             <groupId>com.kaurpalang</groupId>
             <artifactId>mirth-plugin-maven-plugin</artifactId>
             <version>${mirth-plugin-maven-plugin.version}</version>
-        </dependency>
+        </dependency
 
         <dependency>
             <groupId>com.mirth.connect</groupId>
