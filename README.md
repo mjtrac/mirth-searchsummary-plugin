@@ -8,14 +8,12 @@ A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin started f
 1. [Install Java](https://www.javatpoint.com/javafx-how-to-install-java)
 1. [Install Maven](https://www.javatpoint.com/how-to-install-maven)
 1. Run `git clone https://github.com/mjtrac/mirth-searchsummary-plugin`
-1. Copy  m2settings.xml to use as your local maven settings.xml, located in .m2 under your home directory, or include the <servers> material from m2settings.xml in your existing ~/.m2/settings.xml. (This is required to get permissions needed for Kaur's mirth-resources-api repo at github.)
-1. Navigate to `mirth-searchsummary-plugin/`
 1. Run `mvn install` to install dependencies to local cache (see below if you get an error message indicating you are Unauthorized to download from the github repo)
 1. Run `mvn clean package` to verify the build works
 1. Install the sample plugin by getting the `.zip` archive from `mirth-searchsummary-plugin/distribution/target`
 ---
 
-## Installation of pre-built zip for Mirth Connect 4.3.0
+## Installation of pre-built zip for Mirth Connect 4.3.0 (see below for flag you MUST use with Mirth Administrator Launcher after installing)
 1. `git clone https://github.com/mjtrac/mirth-searchsummary-plugin`
 1. This will create a directory under your current directory, named mirth-searchsummary-plugin
 1. Run Mirth Connect 4.3.0 (this zip will only work with 4.3.0)
@@ -25,7 +23,6 @@ A [Mirth Connect](https://github.com/nextgenhealthcare/connect) plugin started f
 1. Restart the Mirth Connect Server and run the Administrator Launcher with the "-k" argument which will allow you to accept a self-signed certificate on the extension.
 1. If you run into trouble, you can go to your Mirth Connect appdata folder and, in extension.properties, change the line Search\ Summary\ Plugin=true to Search\ Summary\ Plugin= false and restart server and client.
 ## Usage
-IMPORTANT: You MUST add server information to your Maven settings.xml file in your ~/.m2 folder in order to use Kaur's repository of various Mirth jars in building this plugin.
 
 IMPORTANT: Once this extension is installed, the Mirth Connect Administrator Launcher will need to be run with the -k flag that allows you to accept self-signed certificates, as the provided plugin certificate is self-signed.  You will then need to accept the prompt the launcher displays when it encounters the plugin.
 
